@@ -116,22 +116,22 @@ end
 
 class Olelo::Page
   # cache results in source blocks before save
-  before(:save, 9999) do |page|
+  before(:save, 9999) do
     begin
-      dir = File.join(Config.tmp_path, 'org', page.path)
+      dir = File.join(Config.tmp_path, 'org', @path)
       filename = OrgMode::tempname+'.org'
       filepath = File.join(dir, filename)
       filepath_esc = OrgMode::escape(filepath)
 
       FileUtils.mkdir_p(dir)
       file = File.new(filepath, 'w')
-      file.write(OrgMode::filter_content(page.content))
+      file.write(OrgMode::filter_content(@content))
       file.close
 
       OrgMode::emacs("(find-file \"#{filepath_esc}\") (org-babel-execute-buffer) (save-buffer)", "(kill-buffer)")
-      page.content = OrgMode::unfilter_content(File.read(filepath))
+      @content = OrgMode::unfilter_content(File.read(filepath))
     ensure
-      File.unlink(filepath)
+      File.unlink(filepath) if File.exist?(filepath)
     end
   end
 end
