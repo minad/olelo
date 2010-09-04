@@ -5,7 +5,7 @@
       org-export-headline-levels 3
       org-export-with-toc nil
       org-export-with-section-numbers nil
-      org-export-with-LaTeX-fragments nil
+      org-export-with-LaTeX-fragments t
       org-export-html-auto-postamble nil
       org-export-html-style-include-default nil
       org-export-html-style "<link rel=\"stylesheet\" type=\"text/css\" href=\"/static/org/org-info.css\" />"
