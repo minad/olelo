@@ -33,7 +33,7 @@ regexp :textile_nowiki,  /<pre>.*?<\/pre>/m,    '<notags>\0</notags>'
 #  mime    'text/html'            # Generated mime type. Only interesting for engines which don't need a layout.
 #  filter do                      # Define filter chain
 #    remove_comments              # First filter removes html comments <!--...-->. This filter is defined above.
-#    tag_shortcuts                # Replace tag shortcuts with tags (e.g $$...$$ -> <math>...</math>, <<page>> -> <include page"page"/>)
+#    tag_shortcuts                # Replace tag shortcuts with tags (e.g $$...$$ -> <math>...</math>, <<page>> -> <include page="page"/>)
 #    creole_nowiki                # Replace creole nowiki tags with <notags> to disable tag interpretation (next filter)
 #    tag do                       # Interpret wiki tags. Wiki tags are an extension to default wiki text
 #      creole!                    # Transform creole to html
@@ -283,6 +283,7 @@ end
 # Orgmode engines configuration
 ################################################################################
 
+#engine :page_rb do
 engine :page do
   is_cacheable.needs_layout.has_priority(1)
   accepts 'text/x-orgmode'
@@ -293,6 +294,7 @@ engine :page do
   end
 end
 
+#engine :s5_rb do
 engine :s5 do
   is_cacheable
   accepts 'text/x-orgmode'
@@ -305,6 +307,7 @@ engine :s5 do
   end
 end
 
+#engine :latex_rb do
 engine :latex do
   is_cacheable
   accepts 'text/x-orgmode'
@@ -314,5 +317,59 @@ engine :latex do
     tag { orgmode!.rubypants }
     toc.interwiki(:map => interwiki_map)
     html_wrapper!.xslt!(:stylesheet => 'xhtml2latex.xsl')
+  end
+end
+
+################################################################################
+# Orgmode_emacs engines configuration
+################################################################################
+
+engine :page_emacs do
+#engine :page do
+#  is_cacheable.adds_title.needs_layout.has_priority(0)
+  is_cacheable.adds_title.needs_layout.has_priority(1)
+  accepts 'text/x-orgmode'
+  filter do
+    tag { orgmode_emacs!(:export => 'html') }
+  end
+end
+
+engine :info_emacs do
+#engine :info do
+  is_cacheable.adds_title.needs_layout
+  accepts 'text/x-orgmode'
+  filter do
+    tag { orgmode_emacs!(:export => 'html', :infojs => true) }
+  end
+end
+
+engine :s5_emacs do
+#engine :s5 do
+  is_cacheable.adds_title
+  accepts 'text/x-orgmode'
+  mime 'application/xhtml+xml; charset=utf-8'
+  filter do
+    tag { orgmode_emacs!(:export => 'html') }
+    html_wrapper!.s5!
+  end
+end
+
+engine :latex_emacs do
+#engine :latex do
+  is_cacheable.adds_title
+  accepts 'text/x-orgmode'
+  mime 'application/x-latex; charset=utf-8'
+  filter do
+    tag { orgmode_emacs!(:export => 'latex') }
+  end
+end
+
+engine :pdf_emacs do
+#engine :pdf do
+  is_cacheable.adds_title
+  accepts 'text/x-orgmode'
+  mime 'application/pdf; charset=utf-8'
+  filter do
+    tag { orgmode_emacs!(:export => 'pdf') }
   end
 end

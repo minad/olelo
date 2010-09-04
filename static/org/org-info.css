@@ -1,0 +1,26 @@
+#content .todo   { color: red; }
+#content .done   { color: green; }
+#content .tag    { background-color: #add8e6; font-weight:normal }
+#content .target { }
+#content .timestamp { color: #bebebe; }
+#content .timestamp-kwd { color: #5f9ea0; }
+#content p.verse { margin-left: 3% }
+#content pre {
+        border: 1pt solid #AEBDCC;
+        background-color: #F3F5F7;
+        padding: 5pt;
+        font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+}
+#content table { border-collapse: collapse; }
+#content td, th { vertical-align: top; }
+#content dt { font-weight: bold; }
+#content div.figure { padding: 0.5em; }
+#content div.figure p { text-align: center; }
+#content textarea { overflow-x: auto; }
+#content .linenr { font-size:smaller }
+#content .code-highlighted { background-color:#ffff00; }
+#content .org-info-js_info-navigation { border-style:none; }
+#content #org-info-js_console-label { font-size:10px; font-weight:bold; white-space:nowrap; }
+#content .org-info-js_search-highlight { background-color:#ffff00; color:#000000; font-weight:bold; }
