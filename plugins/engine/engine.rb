@@ -61,10 +61,11 @@ class Olelo::Engine
     @mime        = options[:mime]
     @plugin      = options[:plugin] || Plugin.current(1)
     @description = options[:description] || @plugin.description
+    @title       = options[:title]
   end
 
   attr_reader :name, :priority, :mime, :accepts, :description, :plugin
-  attr_reader? :layout, :hidden, :cacheable
+  attr_reader? :layout, :hidden, :cacheable, :title
 
   # Engines hash
   def self.engines
@@ -143,10 +144,10 @@ class Olelo::Application
   before :show do
     begin
       params[:output] ||= 'tree' if params[:path].to_s.ends_with? '/'
+      engine = Engine.find!(page, :name => params[:output])
       @engine_name, layout, response, content =
         Cache.cache("engine-#{page.path}-#{page.version}-#{build_query(params)}",
                     :marshal => true, :update => request.no_cache?, :defer => true) do |cache|
-        engine = Engine.find!(page, :name => params[:output])
         cache.disable! if !engine.cacheable?
         context = Context.new(:page => page, :params => params, :request => request)
         content = engine.output(context)
@@ -157,9 +158,11 @@ class Olelo::Application
       self.response.header.merge!(response)
       if layout
         if request.xhr?
-          content = "<h1>#{escape_html page.title}</h1>#{content}"
+          if !engine.title?
+            content = "<h1>#{escape_html page.title}</h1>#{content}"
+          end
         else
-          content = render(:show, :locals => {:content => content})
+          content = render(:show, :locals => {:content => content, :adds_title => engine.title?})
         end
       end
       halt content

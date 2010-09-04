@@ -8,5 +8,6 @@
   = :by.t
   = page.version.author.name
   ! , #{date page.version.date}
-%h1= title
+- if !adds_title
+  %h1= title
 != content

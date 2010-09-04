@@ -153,6 +153,7 @@ class FilterDSL
     def needs_layout;       @options[:layout] = true;     self; end
     def has_priority(prio); @options[:priority] = prio;   self; end
     def is_cacheable;       @options[:cacheable] = true;  self; end
+    def adds_title;         @options[:title] = true;      self; end
   end
 
   # Register regexp filter
