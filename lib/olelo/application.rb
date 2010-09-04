@@ -239,7 +239,11 @@ module Olelo
             halt render(:show, :locals => {:content => page.try(:content)})
           end
         rescue NotFound
-          redirect absolute_path('new'/params[:path].to_s) if params[:version].blank?
+          if Config.notfound_capitalize && params[:path].to_s != params[:path].to_s.capitalize
+            redirect absolute_path(params[:path].to_s.capitalize) if params[:version].blank?
+          else
+            redirect absolute_path('new'/params[:path].to_s) if params[:version].blank?
+          end
           raise
         end
       end

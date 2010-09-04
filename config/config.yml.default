@@ -26,6 +26,9 @@ base_path:      '/'
 # Temporary directory used for caches etc. Uncomment this!
 #tmp_path:        '/home/user/wiki/tmp'
 
+# if a wiki page is not found, try capitalized version before redirecting to new page form
+notfound_capitalize: true
+
 ##################################################
 # Authentication backend configuration
 
