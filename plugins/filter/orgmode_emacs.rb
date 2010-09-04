@@ -1,5 +1,6 @@
 description  'Emacs org-mode filter (using emacs/emacsclient)'
-dependencies 'engine/filter'
+dependencies 'engine/filter', 'utils/assets'
+export_scripts 'orgmode_emacs/*.css'
 
 class Olelo::OrgMode
   def OrgMode.tempname
@@ -97,16 +98,12 @@ Filter.create :orgmode_emacs do |context, content|
 
     case @options[:export]
     when 'html'
+      # set appropriate image paths (different in preview & saved view)
       result.gsub!(/(<img.*?src=")(.*?)"/i) { |s|
         $1 + (File.exist?(File.join(Config.tmp_path, uri, $2)) ? uri : uri_saved) +
         $2 + "?#{Time.now.to_i}\""
       }
-      result.gsub!(/.*((?:<style.*<\/style>.*?)?
-                    (?:<link.*?>.*?)?
-                    (?:<style.*<\/style>.*?)?
-                    (?:<script.*<\/script>)).*?
-                    <div\ id="content">(.*)<\/div>.*/mix,
-                   '\\1\\2')
+      result.gsub!(/.*(?:<meta.*?>)+(.*)<\/head>.*?<div id="content">(.*)<\/div>.*/mi, '\\1\\2')
     end
     result
   ensure
