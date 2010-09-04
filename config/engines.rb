@@ -244,6 +244,42 @@ engine :latex do
 end
 
 ################################################################################
+# Mediawiki engines configuration
+################################################################################
+
+engine :page do
+  is_cacheable.needs_layout.has_priority(1)
+  accepts 'text/x-mediawiki'
+  filter do
+    remove_comments.tag_shortcuts
+    tag { mediawiki!.rubypants }
+    toc
+  end
+end
+
+engine :s5 do
+  is_cacheable
+  accepts 'text/x-mediawiki'
+  mime 'application/xhtml+xml; charset=utf-8'
+  filter do
+    remove_comments.tag_shortcuts
+    tag { mediawiki!.rubypants }
+    toc.html_wrapper!.s5!
+  end
+end
+
+engine :latex do
+  is_cacheable
+  accepts 'text/x-mediawiki'
+  mime 'text/plain; charset=utf-8'
+  filter do
+    remove_comments.tag_shortcuts
+    tag { mediawiki!.rubypants }
+    toc.html_wrapper!.xslt!(:stylesheet => 'xhtml2latex.xsl')
+  end
+end
+
+################################################################################
 # Orgmode engines configuration
 ################################################################################
 
