@@ -9,16 +9,22 @@ class Olelo::OrgMode
 
   # filter content
   # TODO: check for other keywords that need to be filtered
-  def OrgMode.filter_content(s)
+  def OrgMode.filter_content(s, options)
     repo = Config.repository[Config.repository.type]
-    filter_src(s).
-      #+INCLUDE: make file path relative to repository path (this works only with non-bare repos)
-      gsub(/^(\s*\#\+INCLUDE:?)\s+(?:"(.+?)"|(\S+))(.*)$/i) {|s|
+    s = filter_src(s)
+    if (options[:include] == 'wiki')
+      #+INCLUDE: replace it with wiki include tag
+      s.gsub(/^\s*#\+INCLUDE:?\s+(?:"(.+?)"|(\S+))(.*)$/i, '#+HTML: <include page="\1\2" \3/>')
+    else
+      #+INCLUDE: make file path relative to repository path
+      # (this works only with non-bare repos, in case of bare repos the whole line is removed)
+      s.gsub(/^(\s*\#\+INCLUDE:?)\s+(?:"(.+?)"|(\S+))(.*)$/i) {|s|
         if !repo.bare
           file = File.join(repo.path, File.expand_path("/#{$2}#{$3}"))
           file = File.join(file, 'content') if File.directory?(file)
           "#{$1} \"#{file}\"#{$4}"
         else; ''; end}
+    end
   end
 
   # prevent absolute paths & command execution in code blocks
@@ -78,7 +84,7 @@ Filter.create :orgmode_emacs do |context, content|
     basepath_esc = OrgMode::escape(basepath)
     file = File.new(basepath+'.org', 'w')
 
-    content = OrgMode::filter_content(content)
+    content = OrgMode::filter_content(content, @options)
 
     # default title, can be overridden in document
     opts = "#+TITLE: #{context.page.title}\n"

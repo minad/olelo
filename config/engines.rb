@@ -16,7 +16,6 @@ regexp :tag_shortcuts,   /\$\$(.*?)\$\$/m,      '<math display="inline">\1</math
                          /<<(.*?)(\|(.*?))?>>/, '<include page="\1" \3/>'
 regexp :creole_nowiki,   /\{\{\{.*?\}\}\}/m,    '<notags>\0</notags>'
 regexp :textile_nowiki,  /<pre>.*?<\/pre>/m,    '<notags>\0</notags>'
-regexp :orgmode_include_wiki, /^\s*#\+INCLUDE:?\s+(?:"(.+?)"|(\S+))(.*)$/i, '<include page="\1\2" \3/>'
 
 ################################################################################
 #
@@ -324,6 +323,21 @@ end
 ################################################################################
 # Orgmode_emacs engines configuration
 ################################################################################
+# Options
+##########
+# :export (string)
+#   - sets export type, possible values: html, latex, pdf
+# :infojs (bool)
+#   - if set to false: sets #+INFOJS_OPT: view:showall ltoc:nil\n
+# :include (string)
+#   - by default #+INCLUDE filename is replaced to be relative to repository root if you have a non-bare repository
+#   - if set to 'wiki': replaces #+INCLUDE lines to <include page="filename"/>
+#     (in this case you can include non-org pages as well, but it only works in html, in latex & pdf not)
+#
+# Security
+###########
+# - source block options are filtered with s/[^\s\w:.-]//g (both #+begin_src options and src_foo[options]{...})
+# - #+INCLUDE lines are filtered as described above
 
 engine :page_emacs do
 #engine :page do
@@ -331,10 +345,6 @@ engine :page_emacs do
   is_cacheable.adds_title.needs_layout.has_priority(1)
   accepts 'text/x-orgmode'
   filter do
-    #+INCLUDE: filename is replaced to be relative to repository root if you have a non-bare repository
-    # if you want rather to replace these lines to <include page="filename"/> uncomment the following line
-    # (in this case you can include non-org pages as well, but it only works in html, in latex & pdf not)
-#    orgmode_include_wiki
     orgmode_emacs!(:export => 'html').tag
   end
 end
@@ -344,7 +354,6 @@ engine :info_emacs do
   is_cacheable.adds_title.needs_layout
   accepts 'text/x-orgmode'
   filter do
-#    orgmode_include_wiki
     orgmode_emacs!(:export => 'html', :infojs => true).tag
   end
 end
@@ -355,7 +364,6 @@ engine :s5_emacs do
   accepts 'text/x-orgmode'
   mime 'application/xhtml+xml; charset=utf-8'
   filter do
-#    orgmode_include_wiki
     orgmode_emacs!(:export => 'html').tag
     html_wrapper!.s5!
   end
@@ -367,7 +375,7 @@ engine :latex_emacs do
   accepts 'text/x-orgmode'
   mime 'application/x-latex; charset=utf-8'
   filter do
-    orgmode_emacs!(:export => 'latex').tag
+    orgmode_emacs!(:export => 'latex')
   end
 end
 
@@ -377,6 +385,6 @@ engine :pdf_emacs do
   accepts 'text/x-orgmode'
   mime 'application/pdf; charset=utf-8'
   filter do
-    orgmode_emacs!(:export => 'pdf').tag
+    orgmode_emacs!(:export => 'pdf')
   end
 end
