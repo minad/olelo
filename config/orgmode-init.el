@@ -8,6 +8,7 @@
       org-export-with-LaTeX-fragments t
       org-export-html-auto-postamble nil
       org-export-html-style-include-default nil
+      org-export-html-style-include-scripts nil
       org-export-html-style ""
       org-export-html-use-infojs t
       org-infojs-options '((path . "http://orgmode.org/org-info.js")
