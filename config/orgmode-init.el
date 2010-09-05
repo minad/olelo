@@ -21,13 +21,9 @@
                            (buttons . "0")
                            (up . :link-up)
                            (home . :link-home))
-      org-babel-default-header-args '((:session . "none")
-                                      (:results . "replace")
-                                      (:exports . "code")
-                                      (:cache . "yes")
-                                      (:noweb . "no")
-                                      (:hlines . "no")
-                                      (:tangle . "no"))
+      ; List of languages enabled for evaluation
+      ; Note: source block options are filtered with s/[^\s\w:.-]//g
+      ;       to prevent absolute paths & command execution
       org-babel-load-languages '((emacs-lisp . nil)
                                  (dot . t)
                                  (ditaa . t)
@@ -37,7 +33,12 @@
                                  (ruby . nil)
                                  (clojure . nil)
                                  (sh . nil))
+      org-babel-default-header-args '((:session . "none")
+                                      (:results . "replace")
+                                      (:exports . "code")
+                                      (:cache . "yes")
+                                      (:noweb . "no")
+                                      (:hlines . "no")
+                                      (:tangle . "no"))
       org-ditaa-jar-path "/opt/ditaa/ditaa.jar"
-      org-confirm-babel-evaluate nil)   ; Do not prompt to confirm evaluation. This may be dangerous.
-                                        ; Make sure you understand the consequences of setting this
-                                        ; See the docstring for details.
+      org-confirm-babel-evaluate nil)

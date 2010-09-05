@@ -7,18 +7,37 @@ class Olelo::OrgMode
     "#{Time.now.to_i}-#{rand(0x100000000).to_s(36)}"
   end
 
-  # prevent absolute paths & command execution e.g. #+begin_src ditaa :file /tmp/foo; rm -rf /
+  # filter content
   # TODO: check for other keywords that need to be filtered
-  def OrgMode.filter_content(content)
-    content.gsub(/^(#\+BEGIN_SRC)(.*)$/i) {|s| "#+COMMENT: "+$1+$2+"\n" + $1+$2.gsub(/[^\s\w:.-]/, '')}
+  def OrgMode.filter_content(s)
+    repo = Config.repository[Config.repository.type]
+    filter_src(s).
+      #+INCLUDE: make file path relative to repository path (this works only with non-bare repos)
+      gsub(/^(\s*\#\+INCLUDE:?)\s+(?:"(.+?)"|(\S+))(.*)$/i) {|s|
+        if !repo.bare
+          file = File.join(repo.path, File.expand_path("/#{$2}#{$3}"))
+          file = File.join(file, 'content') if File.directory?(file)
+          "#{$1} \"#{file}\"#{$4}"
+        else; ''; end}
   end
 
-  def OrgMode.unfilter_content(content)
-    content.gsub(/^#\+COMMENT: (#\+BEGIN_SRC.*?)\n#\+BEGIN_SRC.*?$/mi, '\\1')
+  # prevent absolute paths & command execution in code blocks
+  # e.g. #+begin_src ditaa :file /tmp/foo; rm -rf /
+  def OrgMode.filter_src(s)
+    s.gsub(/(?: ^(\s*\#\+BEGIN_SRC)(.*)$ |
+                ^((?:.*[ \f\t\n\r\v]|)src_\w+\[)(.*)(\]\{.*\}.*)$ )/ix) {|s|
+      a = "#{$1}#{$3}"; m = "#{$2}#{$4}"; z = "#{$5}"
+      "#+OLELO_FILTER_SRC: "+a+m+z+"\n" + a + m.gsub(/[^\s\w:.-]/, '') + z
+    }
+  end
+
+  def OrgMode.unfilter_src(s)
+    s.gsub(/^#\+OLELO_FILTER_SRC: (.*?)\n(.*?)$/mi, '\1')
   end
 
   def OrgMode.escape(s)
-    s.gsub(/\\/,'\\\\').gsub(/"/,'\"')
+    s.gsub(/\\/,'\\\\').
+      gsub(/"/,'\"')
   end
 
   def OrgMode.emacs(eval, ec_eval)
@@ -103,7 +122,7 @@ Filter.create :orgmode_emacs do |context, content|
         $1 + (File.exist?(File.join(Config.tmp_path, uri, $2)) ? uri : uri_saved) +
         $2 + "?#{Time.now.to_i}\""
       }
-      result.gsub!(/.*(?:<meta.*?>)+(.*)<\/head>.*?<div id="content">(.*)<\/div>.*/mi, '\\1\\2')
+      result.gsub!(/.*(?:<meta.*?>)+(.*)<\/head>.*?<div id="content">(.*)<\/div>.*/mi, '\1\2')
     end
     result
   ensure
@@ -123,11 +142,11 @@ class Olelo::Page
 
       FileUtils.mkdir_p(dir)
       file = File.new(filepath, 'w')
-      file.write(OrgMode::filter_content(@content))
+      file.write(OrgMode::filter_src(@content))
       file.close
 
       OrgMode::emacs("(find-file \"#{filepath_esc}\") (org-babel-execute-buffer) (save-buffer)", "(kill-buffer)")
-      @content = OrgMode::unfilter_content(File.read(filepath))
+      @content = OrgMode::unfilter_src(File.read(filepath))
     ensure
       File.unlink(filepath) if File.exist?(filepath)
     end

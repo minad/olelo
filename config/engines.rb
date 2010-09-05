@@ -16,6 +16,7 @@ regexp :tag_shortcuts,   /\$\$(.*?)\$\$/m,      '<math display="inline">\1</math
                          /<<(.*?)(\|(.*?))?>>/, '<include page="\1" \3/>'
 regexp :creole_nowiki,   /\{\{\{.*?\}\}\}/m,    '<notags>\0</notags>'
 regexp :textile_nowiki,  /<pre>.*?<\/pre>/m,    '<notags>\0</notags>'
+regexp :orgmode_include_wiki, /^\s*#\+INCLUDE:?\s+(?:"(.+?)"|(\S+))(.*)$/i, '<include page="\1\2" \3/>'
 
 ################################################################################
 #
@@ -330,6 +331,10 @@ engine :page_emacs do
   is_cacheable.adds_title.needs_layout.has_priority(1)
   accepts 'text/x-orgmode'
   filter do
+    #+INCLUDE: filename is replaced to be relative to repository root if you have a non-bare repository
+    # if you want rather to replace these lines to <include page="filename"/> uncomment the following line
+    # (in this case you can include non-org pages as well, but it only works in html, in latex & pdf not)
+#    orgmode_include_wiki
     tag { orgmode_emacs!(:export => 'html') }
   end
 end
@@ -339,6 +344,7 @@ engine :info_emacs do
   is_cacheable.adds_title.needs_layout
   accepts 'text/x-orgmode'
   filter do
+#    orgmode_include_wiki
     tag { orgmode_emacs!(:export => 'html', :infojs => true) }
   end
 end
@@ -349,6 +355,7 @@ engine :s5_emacs do
   accepts 'text/x-orgmode'
   mime 'application/xhtml+xml; charset=utf-8'
   filter do
+#    orgmode_include_wiki
     tag { orgmode_emacs!(:export => 'html') }
     html_wrapper!.s5!
   end
