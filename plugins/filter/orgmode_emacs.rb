@@ -24,8 +24,8 @@ class Olelo::OrgMode
   # prevent absolute paths & command execution in code blocks
   # e.g. #+begin_src ditaa :file /tmp/foo; rm -rf /
   def OrgMode.filter_src(s)
-    s.gsub(/(?: ^(\s*\#\+BEGIN_SRC)(.*)$ |
-                ^((?:.*[ \f\t\n\r\v]|)src_\w+\[)(.*)(\]\{.*\}.*)$ )/ix) {|s|
+    s.gsub(/(?: ^([ \t]*\#\+BEGIN_SRC)(.*)$ |
+                ^((?:.*[ \f\t\r\v]|)src_\w+\[)(.*)(\]\{.*\}.*)$ )/ix) {|s|
       a = "#{$1}#{$3}"; m = "#{$2}#{$4}"; z = "#{$5}"
       "#+OLELO_FILTER_SRC: "+a+m+z+"\n" + a + m.gsub(/[^\s\w:.-]/, '') + z
     }
