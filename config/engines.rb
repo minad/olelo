@@ -345,7 +345,7 @@ engine :page_emacs do
   is_cacheable.adds_title.needs_layout.has_priority(1)
   accepts 'text/x-orgmode'
   filter do
-    orgmode_emacs!(:export => 'html').tag
+    orgmode_emacs!(:export => 'html')
   end
 end
 
@@ -354,7 +354,7 @@ engine :info_emacs do
   is_cacheable.adds_title.needs_layout
   accepts 'text/x-orgmode'
   filter do
-    orgmode_emacs!(:export => 'html', :infojs => true).tag
+    orgmode_emacs!(:export => 'html', :infojs => true)
   end
 end
 
@@ -364,7 +364,7 @@ engine :s5_emacs do
   accepts 'text/x-orgmode'
   mime 'application/xhtml+xml; charset=utf-8'
   filter do
-    orgmode_emacs!(:export => 'html').tag
+    orgmode_emacs!(:export => 'html')
     html_wrapper!.s5!
   end
 end
