@@ -112,7 +112,8 @@ Filter.create :orgmode_emacs do |context, content|
 end
 
 class Olelo::Page
-  # cache results in source blocks before save
+  # store sha1 hash of src blocks, so they're re-evaluted only when changed
+  # see http://orgmode.org/org.html#cache
   before(:save, 9999) do
     begin
       dir = File.join(Config.tmp_path, 'org', @path)
