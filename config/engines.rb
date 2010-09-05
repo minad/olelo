@@ -335,7 +335,7 @@ engine :page_emacs do
     # if you want rather to replace these lines to <include page="filename"/> uncomment the following line
     # (in this case you can include non-org pages as well, but it only works in html, in latex & pdf not)
 #    orgmode_include_wiki
-    tag { orgmode_emacs!(:export => 'html') }
+    orgmode_emacs!(:export => 'html').tag
   end
 end
 
@@ -345,7 +345,7 @@ engine :info_emacs do
   accepts 'text/x-orgmode'
   filter do
 #    orgmode_include_wiki
-    tag { orgmode_emacs!(:export => 'html', :infojs => true) }
+    orgmode_emacs!(:export => 'html', :infojs => true).tag
   end
 end
 
@@ -356,7 +356,7 @@ engine :s5_emacs do
   mime 'application/xhtml+xml; charset=utf-8'
   filter do
 #    orgmode_include_wiki
-    tag { orgmode_emacs!(:export => 'html') }
+    orgmode_emacs!(:export => 'html').tag
     html_wrapper!.s5!
   end
 end
@@ -367,7 +367,7 @@ engine :latex_emacs do
   accepts 'text/x-orgmode'
   mime 'application/x-latex; charset=utf-8'
   filter do
-    tag { orgmode_emacs!(:export => 'latex') }
+    orgmode_emacs!(:export => 'latex').tag
   end
 end
 
@@ -377,6 +377,6 @@ engine :pdf_emacs do
   accepts 'text/x-orgmode'
   mime 'application/pdf; charset=utf-8'
   filter do
-    tag { orgmode_emacs!(:export => 'pdf') }
+    orgmode_emacs!(:export => 'pdf').tag
   end
 end
