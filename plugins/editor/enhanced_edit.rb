@@ -5,14 +5,14 @@ class Olelo::Application
   hook :layout do |name, doc|
     if name == :edit
       if @preview
-        doc.css('#content .tabs').before %{<div class="preview">#{@preview}</div>}
+        doc.css('#content .tabs').before Nokogiri::HTML::DocumentFragment.parse(%{<div class="preview">#{@preview}</div>})
       elsif @patch
-        doc.css('#content .tabs').before @patch
+        doc.css('#content .tabs').before Nokogiri::HTML::DocumentFragment.parse(@patch)
       end
 
       doc.css('#tab-edit button[type=submit]').before(
-        %{<button type="submit" name="action" value="preview" accesskey="p">#{:preview.t}</button>
-          <button type="submit" name="action" value="changes" accesskey="c">#{:changes.t}</button>}.unindent)
+        Nokogiri::HTML::DocumentFragment.parse(%{<button type="submit" name="action" value="preview" accesskey="p">#{:preview.t}</button>
+          <button type="submit" name="action" value="changes" accesskey="c">#{:changes.t}</button>}.unindent))
     end
   end
 
