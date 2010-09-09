@@ -331,8 +331,9 @@ end
 #   - if set to false: sets #+INFOJS_OPT: view:showall ltoc:nil\n
 # :include (string)
 #   - by default #+INCLUDE filename is replaced to be relative to repository root if you have a non-bare repository
-#   - if set to 'wiki': replaces #+INCLUDE lines to <include page="filename"/>
-#     (in this case you can include non-org pages as well, but it only works in html, in latex & pdf not)
+#   - if set to 'wiki': (this doesn't work atm, because the tag filter is turned off for now as the html_tags filter causes problems)
+#       replaces #+INCLUDE lines to <include page="filename"/>
+#       in this case you can include non-org pages as well, but it only works in html, in latex & pdf not
 #
 # Security
 ###########
