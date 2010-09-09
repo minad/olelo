@@ -10,7 +10,6 @@ class Olelo::OrgMode
   # filter content
   # TODO: check for other keywords that need to be filtered
   def OrgMode.filter_content(s, options)
-    repo = Config.repository[Config.repository.type]
     s = filter_src(s)
     if (options[:include] == 'wiki')
       #+INCLUDE: replace it with wiki include tag
@@ -18,9 +17,11 @@ class Olelo::OrgMode
     else
       #+INCLUDE: make file path relative to repository path
       # (this works only with non-bare repos, in case of bare repos the whole line is removed)
+      repo = Config.repository[Config.repository.type]
+      begin; path = repo.bare ? repo.path_non_bare : repo.path; rescue; end
       s.gsub(/^(\s*\#\+INCLUDE:?)\s+(?:"(.+?)"|(\S+))(.*)$/i) {|s|
-        if !repo.bare
-          file = File.join(repo.path, File.expand_path("/#{$2}#{$3}"))
+        if path && File.directory?(path)
+          file = File.join(path, File.expand_path("/#{$2}#{$3}"))
           file = File.join(file, 'content') if File.directory?(file)
           "#{$1} \"#{file}\"#{$4}"
         else; ''; end}
