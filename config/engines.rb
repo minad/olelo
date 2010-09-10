@@ -375,6 +375,7 @@ engine :icalendar_emacs do
   is_cacheable
   accepts 'text/x-orgmode'
   mime 'text/calendar; charset=utf-8'
+  download_ext 'ics'
   filter do
     orgmode_emacs!(:export => 'icalendar')
   end
@@ -385,6 +386,7 @@ engine :latex_emacs do
   is_cacheable
   accepts 'text/x-orgmode'
   mime 'application/x-latex; charset=utf-8'
+  download_ext 'tex'
   filter do
     orgmode_emacs!(:export => 'latex')
   end
@@ -395,6 +397,7 @@ engine :pdf_emacs do
   is_cacheable
   accepts 'text/x-orgmode'
   mime 'application/pdf; charset=utf-8'
+  download_ext 'pdf'
   filter do
     orgmode_emacs!(:export => 'pdf')
   end

@@ -62,9 +62,10 @@ class Olelo::Engine
     @plugin      = options[:plugin] || Plugin.current(1)
     @description = options[:description] || @plugin.description
     @title       = options[:title]
+    @download_ext = options[:download_ext]
   end
 
-  attr_reader :name, :priority, :mime, :accepts, :description, :plugin
+  attr_reader :name, :priority, :mime, :accepts, :description, :plugin, :download_ext
   attr_reader? :layout, :hidden, :cacheable, :title
 
   # Engines hash
@@ -153,6 +154,11 @@ class Olelo::Application
         content = engine.output(context)
         context.response['Content-Type'] ||= engine.mime.to_s if engine.mime
         context.response['Content-Type'] ||= page.mime.to_s if !engine.layout?
+        if engine.download_ext
+          name = context.page.root? ? :root.t : context.page.name.gsub(/[^\w.\-_]/, '_')
+          context.response['Content-Disposition'] = %{attachment; filename="#{name}.#{engine.download_ext}"}
+          context.response['Content-Length'] = content.bytesize.to_s
+        end
         [engine.name, engine.layout?, context.response.to_hash, content]
       end
       self.response.header.merge!(response)

@@ -154,6 +154,7 @@ class FilterDSL
     def has_priority(prio); @options[:priority] = prio;   self; end
     def is_cacheable;       @options[:cacheable] = true;  self; end
     def adds_title;         @options[:title] = true;      self; end
+    def download_ext(ext);  @options[:download_ext] = ext; self; end
   end
 
   # Register regexp filter
