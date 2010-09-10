@@ -11,6 +11,9 @@
       org-export-html-style-include-scripts nil
       org-export-html-style ""
       org-export-html-use-infojs t
+      org-export-docbook-xsl-fo-proc-command "fop %i %o"
+      org-export-docbook-xslt-proc-command "xsltproc --output %o %s %i"
+      org-export-docbook-xslt-stylesheet "/usr/share/sgml/docbook/xsl-stylesheets/fo/docbook.xsl"
       org-infojs-options '((path . "http://orgmode.org/org-info.js")
                            (view . "info")
                            (toc . :table-of-contents)

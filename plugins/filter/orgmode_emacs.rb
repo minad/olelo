@@ -96,7 +96,6 @@ Filter.create :orgmode_emacs do |context, content|
     case @options[:export]
     when 'html'
       ext = 'html'
-      exts += ['html']
       eval += '(org-export-as-html-batch)'
       if !@options[:infojs]
         # if not in info view, apply showall view, overrides setting in document
@@ -104,22 +103,40 @@ Filter.create :orgmode_emacs do |context, content|
       end
     when 'latex'
       ext = 'tex'
-      exts += ['tex']
       eval += '(org-export-as-latex-batch)'
     when 'pdf'
       ext = 'pdf'
-      exts += ['tex', 'pdf']
+      exts += ['tex']
       eval += '(org-export-as-pdf org-export-headline-levels)'
+    when 'docbook'
+      ext = 'xml'
+      eval += '(org-export-as-docbook-batch)'
+    when 'docbook-pdf'
+      ext = 'pdf'
+      exts += ['xml', 'fo']
+      eval += '(org-export-as-docbook-pdf)'
+    when 'freemind'
+      ext = 'mm'
+      eval += '(org-export-as-freemind)'
     when 'icalendar'
       ext = 'ics'
-      exts += ['ics']
       eval += '(org-export-icalendar-this-file)'
+    when 'taskjuggler'
+      ext = 'tjp'
+      eval += '(org-export-as-taskjuggler)'
+    when 'utf8'
+      ext = 'txt'
+      eval += '(org-export-as-utf8)'
+    when 'xoxo'
+      ext = 'html'
+      eval += '(org-export-as-xoxo)'
     end
 
     file.write(opts + content)
     file.close
 
     ec_eval = ''
+    exts.push(ext)
     exts.each {|e| ec_eval += "(kill-buffer (get-file-buffer \"#{basepath_esc}.#{e}\"))"}
     OrgMode::emacs("(find-file \"#{basepath_esc}.org\") #{eval}", ec_eval)
 

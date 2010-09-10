@@ -339,19 +339,21 @@ end
 ###########
 # - source block options are filtered with s/[^\s\w:.-]//g (both #+begin_src options and src_foo[options]{...})
 # - #+INCLUDE lines are filtered as described above
+#
+# To enable the orgmode_emacs engines remove the =begin & =end lines and rename or disable the ruby orgmode engines above
+# Don't forget to configure the emacs settings in orgmode-init.el
 
-engine :page_emacs do
-#engine :page do
-#  is_cacheable.adds_title.needs_layout.has_priority(0)
-  is_cacheable.needs_layout.adds_title.has_priority(1)
+=begin
+
+engine :page do
+  is_cacheable.needs_layout.adds_title.has_priority(0)
   accepts 'text/x-orgmode'
   filter do
     orgmode_emacs!(:export => 'html')
   end
 end
 
-engine :info_emacs do
-#engine :info do
+engine :info do
   is_cacheable.needs_layout.adds_title
   accepts 'text/x-orgmode'
   filter do
@@ -359,8 +361,7 @@ engine :info_emacs do
   end
 end
 
-engine :s5_emacs do
-#engine :s5 do
+engine :s5 do
   is_cacheable
   accepts 'text/x-orgmode'
   mime 'application/xhtml+xml; charset=utf-8'
@@ -370,19 +371,7 @@ engine :s5_emacs do
   end
 end
 
-engine :icalendar_emacs do
-#engine :icalendar do
-  is_cacheable
-  accepts 'text/x-orgmode'
-  mime 'text/calendar; charset=utf-8'
-  download_ext 'ics'
-  filter do
-    orgmode_emacs!(:export => 'icalendar')
-  end
-end
-
-engine :latex_emacs do
-#engine :latex do
+engine :latex do
   is_cacheable
   accepts 'text/x-orgmode'
   mime 'application/x-latex; charset=utf-8'
@@ -392,8 +381,7 @@ engine :latex_emacs do
   end
 end
 
-engine :pdf_emacs do
-#engine :pdf do
+engine :pdf do
   is_cacheable
   accepts 'text/x-orgmode'
   mime 'application/pdf; charset=utf-8'
@@ -402,3 +390,74 @@ engine :pdf_emacs do
     orgmode_emacs!(:export => 'pdf')
   end
 end
+
+engine :docbook do
+  is_cacheable
+  accepts 'text/x-orgmode'
+  mime 'application/docbook+xml; charset=utf-8'
+  download_ext 'xml'
+  filter do
+    orgmode_emacs!(:export => 'docbook')
+  end
+end
+
+engine :docbook_pdf do
+  is_cacheable
+  accepts 'text/x-orgmode'
+  mime 'application/pdf; charset=utf-8'
+  download_ext 'pdf'
+  filter do
+    orgmode_emacs!(:export => 'docbook-pdf')
+  end
+end
+
+engine :freemind do
+  is_cacheable
+  accepts 'text/x-orgmode'
+  mime 'application/x-freemind; charset=utf-8'
+  download_ext 'mm'
+  filter do
+    orgmode_emacs!(:export => 'freemind')
+  end
+end
+
+engine :icalendar do
+  is_cacheable
+  accepts 'text/x-orgmode'
+  mime 'text/calendar; charset=utf-8'
+  download_ext 'ics'
+  filter do
+    orgmode_emacs!(:export => 'icalendar')
+  end
+end
+
+engine :taskjuggler do
+  is_cacheable
+  accepts 'text/x-orgmode'
+  mime 'application/x-tjp; charset=utf-8'
+  download_ext 'tjp'
+  filter do
+    orgmode_emacs!(:export => 'taskjuggler')
+  end
+end
+
+engine :utf8_text do
+  is_cacheable
+  accepts 'text/x-orgmode'
+  mime 'text/plain; charset=utf-8'
+  download_ext 'txt'
+  filter do
+    orgmode_emacs!(:export => 'utf8')
+  end
+end
+
+engine :xoxo do
+  is_cacheable
+  accepts 'text/x-orgmode'
+  mime 'text/html; charset=utf-8'
+  filter do
+    orgmode_emacs!(:export => 'xoxo')
+  end
+end
+
+=end
