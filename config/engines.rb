@@ -343,7 +343,7 @@ end
 engine :page_emacs do
 #engine :page do
 #  is_cacheable.adds_title.needs_layout.has_priority(0)
-  is_cacheable.adds_title.needs_layout.has_priority(1)
+  is_cacheable.needs_layout.adds_title.has_priority(1)
   accepts 'text/x-orgmode'
   filter do
     orgmode_emacs!(:export => 'html')
@@ -352,7 +352,7 @@ end
 
 engine :info_emacs do
 #engine :info do
-  is_cacheable.adds_title.needs_layout
+  is_cacheable.needs_layout.adds_title
   accepts 'text/x-orgmode'
   filter do
     orgmode_emacs!(:export => 'html', :infojs => true)
@@ -361,7 +361,7 @@ end
 
 engine :s5_emacs do
 #engine :s5 do
-  is_cacheable.adds_title
+  is_cacheable
   accepts 'text/x-orgmode'
   mime 'application/xhtml+xml; charset=utf-8'
   filter do
@@ -370,9 +370,19 @@ engine :s5_emacs do
   end
 end
 
+engine :icalendar_emacs do
+#engine :icalendar do
+  is_cacheable
+  accepts 'text/x-orgmode'
+  mime 'text/calendar; charset=utf-8'
+  filter do
+    orgmode_emacs!(:export => 'icalendar')
+  end
+end
+
 engine :latex_emacs do
 #engine :latex do
-  is_cacheable.adds_title
+  is_cacheable
   accepts 'text/x-orgmode'
   mime 'application/x-latex; charset=utf-8'
   filter do
@@ -382,7 +392,7 @@ end
 
 engine :pdf_emacs do
 #engine :pdf do
-  is_cacheable.adds_title
+  is_cacheable
   accepts 'text/x-orgmode'
   mime 'application/pdf; charset=utf-8'
   filter do

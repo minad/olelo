@@ -65,8 +65,8 @@ Filter.create :orgmode_emacs do |context, content|
   begin
     uri = uri_saved = "/org/#{context.page.path}/"
     basename = OrgMode::tempname
-    exts = ['org']
-    eval = ''
+    exts = ['org'] # list of generated extensions to clean up
+    eval = ''      # lisp code to be executed in emacs
 
     if !context.params[:page_modified]
       dir = File.join(Config.tmp_path, 'org', context.page.path)
@@ -110,6 +110,10 @@ Filter.create :orgmode_emacs do |context, content|
       ext = 'pdf'
       exts += ['tex', 'pdf']
       eval += '(org-export-as-pdf org-export-headline-levels)'
+    when 'icalendar'
+      ext = 'ics'
+      exts += ['ics']
+      eval += '(org-export-icalendar-this-file)'
     end
 
     file.write(opts + content)
