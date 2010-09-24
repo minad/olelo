@@ -116,3 +116,10 @@ repository:
   #git:
   #  path:        '/home/user/wiki/repository'
   #  bare:        true
+  ## set content filename extension
+  #  content_ext:  '.page'
+  ## set attribute filename prefix or extension, these can be nil or string
+  #  attribute_pre: '.'
+  #  attribute_ext: #'.attribute'
+  ## set index page name
+  #  index_page:    'Index'

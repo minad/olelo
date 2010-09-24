@@ -1,12 +1,10 @@
 description 'Git repository backend'
 require     'gitrb'
+require 'extensions/string'
 
 raise 'Newest gitrb version 0.2.7 is required. Please upgrade!' if !Gitrb.const_defined?('VERSION') || Gitrb::VERSION != '0.2.7'
 
 class GitRepository < Repository
-  CONTENT_EXT   = '.content'
-  ATTRIBUTE_EXT = '.attributes'
-
   def initialize(config)
     logger = Plugin.current.logger
     logger.info "Opening git repository: #{config.path}"
@@ -14,6 +12,19 @@ class GitRepository < Repository
                                         :bare => config.bare, :logger => logger)
     @current_transaction = {}
     @git = {}
+    @cfg = Config.repository.git
+  end
+
+  def content_path(path)
+    path = @cfg.index_page if path == ''
+    path + (@cfg.content_ext || '.page')
+  end
+
+  def attribute_path(path)
+    path = @cfg.index_page if path == ''
+    path =~ /(.*\/)?(.*)$/
+    path = String($1) + @cfg.attribute_pre + $2 if @cfg.attribute_pre
+    path + (@cfg.attribute_ext || '')
   end
 
   def git
@@ -39,7 +50,7 @@ class GitRepository < Repository
     check_path(path)
     commit = !tree_version.blank? ? git.get_commit(tree_version.to_s) : git.head
     return nil if !commit
-    object = commit.tree[path]
+    object = commit.tree[path] || commit.tree[content_path(path)]
     return nil if !object
     Page.new(path, commit_to_version(commit), current)
   rescue
@@ -54,16 +65,18 @@ class GitRepository < Repository
 
   def load_history(page, skip, limit)
     git.log(:max_count => limit, :skip => skip,
-            :path => [page.path, page.path + ATTRIBUTE_EXT, page.path + CONTENT_EXT]).map do |c|
+            :path => [page.path, attribute_path(page.path), content_path(page.path)]).map do |c|
       commit_to_version(c)
     end
   end
 
   def load_version(page)
-    commits = git.log(:max_count => 2, :start => page.tree_version, :path => [page.path, page.path + ATTRIBUTE_EXT, page.path + CONTENT_EXT])
+    cnt_path = content_path(page.path)
+    attr_path = attribute_path(page.path)
+    commits = git.log(:max_count => 2, :start => page.tree_version, :path => [page.path, attr_path, cnt_path])
 
     child = nil
-    git.git_rev_list('--reverse', '--remove-empty', "#{commits[0]}..", '--', page.path, page.path + ATTRIBUTE_EXT, page.path + CONTENT_EXT) do |io|
+    git.git_rev_list('--reverse', '--remove-empty', "#{commits[0]}..", '--', page.path, attr_path, cnt_path) do |io|
       child = io.eof? ? nil : git.get_commit(git.set_encoding(io.readline).strip)
     end rescue nil # no error because pipe is closed intentionally
 
@@ -74,7 +87,8 @@ class GitRepository < Repository
     object = git.get_commit(page.tree_version.to_s).tree[page.path]
     if object.type == :tree
       object.map do |name, child|
-        Page.new(page.path/name, page.tree_version, page.current?) if !reserved_name?(name)
+        page_name = name.gsub(/#{Regexp.escape(@cfg.content_ext)}$/, '')
+        Page.new(page.path/page_name, page.tree_version, page.current?) if !reserved_name?(page_name, page.path)
       end.compact
     else
       []
@@ -83,8 +97,7 @@ class GitRepository < Repository
 
   def load_content(page)
     tree = git.get_commit(page.tree_version.to_s).tree
-    object = tree[page.path]
-    object = tree[page.path + CONTENT_EXT] if object && object.type == :tree
+    object = tree[content_path(page.path)]
     if object
       content = object.data
       # Try to force utf-8 encoding and revert to old encoding if this doesn't work
@@ -95,77 +108,49 @@ class GitRepository < Repository
   end
 
   def load_attributes(page)
-    object = git.get_commit(page.tree_version.to_s).tree[page.path + ATTRIBUTE_EXT]
+    object = git.get_commit(page.tree_version.to_s).tree[attribute_path(page.path)]
     object ? YAML.load(object.data) : {}
   end
 
   def save(page)
-    path = page.path
-
-    check_path(path)
+    check_path(page.path)
 
     content = page.content
     content = content.read if content.respond_to? :read
     attributes = page.attributes.empty? ? nil : YAML.dump(page.attributes).sub(/\A\-\-\-\s*\n/s, '')
 
-    names = path.split('/')
-    names.pop
-    parent = git.root
-    names.each do |name|
-      object = parent[name]
-      break if !object
-      if object.type == :blob
-        parent.move(name, name + CONTENT_EXT)
-        break
-      end
-      parent = object
-    end
+    cnt_path = content_path(page.path);
+    attr_path = attribute_path(page.path);
 
-    object = git.root[path]
-    if object
-      if object.type == :tree
-        if content.blank?
-          git.root.delete(path + CONTENT_EXT)
-        else
-          git.root[path + CONTENT_EXT] = Gitrb::Blob.new(:data => content)
-        end
-      else
-        git.root[path] = Gitrb::Blob.new(:data => content)
-      end
-      if attributes
-        git.root[path + ATTRIBUTE_EXT] = Gitrb::Blob.new(:data => attributes)
-      else
-        git.root.delete(path + ATTRIBUTE_EXT)
-      end
-      fix_empty_tree(path)
-    else
-      git.root[path] = Gitrb::Blob.new(:data => content)
-      git.root[path + ATTRIBUTE_EXT] = Gitrb::Blob.new(:data => attributes) if attributes
+    if attributes
+      git.root[attr_path] = Gitrb::Blob.new(:data => attributes)
+    elsif git.root[attr_path]
+      git.root.delete(attr_path)
     end
+    git.root[content_path(page.path)] = Gitrb::Blob.new(:data => content)
 
-    current_transaction << proc {|tree_version| page.committed(path, tree_version) }
+    current_transaction << proc {|tree_version| page.committed(page.path, tree_version) }
   end
 
   def move(page, destination)
     check_path(destination)
-    git.root.move(page.path, destination)
-    git.root.move(page.path + CONTENT_EXT, destination + CONTENT_EXT) if git.root[page.path + CONTENT_EXT]
-    git.root.move(page.path + ATTRIBUTE_EXT, destination + ATTRIBUTE_EXT) if git.root[page.path + ATTRIBUTE_EXT]
-    fix_empty_tree(page.path/'..')
+    # what if destination already exists? we should add a check for that too
+    #git.root.move(page.path, destination) # would this move the whole subtree if page.path is a tree? do we want that?
+    git.root.move(content_path(page.path), content_path(destination)) if git.root[content_path(page.path)]
+    git.root.move(attribute_path(page.path), attribute_path(destination)) if git.root[attribute_path(page.path)]
     current_transaction << proc {|tree_version| page.committed(destination, tree_version) }
   end
 
   def delete(page)
     git.root.delete(page.path)
-    git.root.delete(page.path + CONTENT_EXT)
-    git.root.delete(page.path + ATTRIBUTE_EXT)
-    fix_empty_tree(page.path/'..')
+    git.root.delete(content_path(page.path))
+    git.root.delete(attribute_path(page.path))
     current_transaction << proc { page.committed(page.path, nil) }
   end
 
   def diff(page, from, to)
     diff = git.diff(:from => from && from.to_s, :to => to.to_s,
-                    :path => [page.path, page.path + CONTENT_EXT, page.path + ATTRIBUTE_EXT], :detect_renames => true)
+                    :path => [page.path, content_path(page.path), attribute_path(page.path)], :detect_renames => true)
     Olelo::Diff.new(diff.from && commit_to_version(diff.from), commit_to_version(diff.to), diff.patch)
   end
 
@@ -177,14 +162,17 @@ class GitRepository < Repository
     @git.delete(Thread.current.object_id)
   end
 
-  def reserved_name?(name)
-    name.ends_with?(ATTRIBUTE_EXT) || name.ends_with?(CONTENT_EXT)
+  def reserved_name?(name, path)
+    name.ends_with?(@cfg.content_ext) ||
+      (@cfg.attribute_pre != nil && name.starts_with?(@cfg.attribute_pre)) ||
+      (@cfg.attribute_ext != nil && name.ends_with?(@cfg.attribute_ext)) ||
+      (path == '' && name == @cfg.index_page)
   end
 
   private
 
   def check_path(path)
-    raise :reserved_path.t if path.split('/').any? {|name| reserved_name?(name) }
+    raise :reserved_path.t if reserved_name?(File.basename(path), path)
   end
 
   def current_transaction
@@ -194,12 +182,6 @@ class GitRepository < Repository
   def commit_to_version(commit)
     Olelo::Version.new(commit.id, Olelo::User.new(commit.author.name, commit.author.email),
                        commit.date, commit.message, commit.parents.map(&:id))
-  end
-
-  def fix_empty_tree(path)
-    if !path.blank? && git.root[path].empty? && git.root[path + CONTENT_EXT]
-      git.root.move(path + CONTENT_EXT, path)
-    end
   end
 end
 
