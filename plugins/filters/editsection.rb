@@ -11,7 +11,7 @@ NestingFilter.create :editsection do |context, content|
     prefix = "EDIT#{object_id}X"
     len = content.length
     pos, off = [], 0
-    while (off = content.index(/^([ \t]*([#,=]+)\s(.*?))[#,=]*\s*$/, off))
+    while (off = content.index(/^([ \t]*(=+)(.*?))=*\s*$/, off))
       pos << [$2.size, off, off + $1.size, $3.strip]
       off += $&.size
     end

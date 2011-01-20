@@ -137,7 +137,7 @@ end
 ################################################################################
 
 aspect :page do
-  is_cacheable.needs_layout.has_priority(2)
+  is_cacheable.needs_layout.has_priority(1)
   accepts 'text/x-markdown'
   filter do
     remove_comments.tag_shortcuts.markdown_nowiki
@@ -177,14 +177,11 @@ end
 ################################################################################
 
 aspect :page do
-  is_cacheable.needs_layout.has_priority(1)
+  is_cacheable.needs_layout.has_priority(2)
   accepts 'text/x-markdown(.kramdown)?'
   filter do
-    editsection do
-      remove_comments.tag_shortcuts.markdown_nowiki
-      tag(:disable => 'html:*') { kramdown! }
-    end
-    
+    remove_comments.tag_shortcuts.markdown_nowiki
+    tag(:disable => 'html:*') { kramdown! }
     fix_img_tag.toc
     interwiki(:map => interwiki_map).link_classifier
   end
