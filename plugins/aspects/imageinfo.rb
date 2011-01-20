@@ -1,7 +1,7 @@
 description 'Image information aspect'
 dependencies 'utils/image_magick'
 
-Aspect.create(:imageinfo, :priority => 1, :layout => true, :cacheable => true, :accepts => 'image/') do
+Aspect.create(:imageinfo, :priority => 1, :layout => true, :cacheable => true, :accepts => %r{^image/}) do
   def call(context, page)
     @page = page
     identify = ImageMagick.identify('-format', '%m %h %w', '-').run(page.content).split(' ')

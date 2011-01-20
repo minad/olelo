@@ -73,7 +73,7 @@ class Aspect
     @hidden      = !!options[:hidden]
     @cacheable   = !!options[:cacheable]
     @priority    = (options[:priority] || 99).to_i
-    @accepts     = options[:accepts]
+    @accepts     = String === options[:accepts] ? /^(?:#{options[:accepts]})$/ : options[:accepts]
     @mime        = options[:mime]
     @plugin      = options[:plugin] || Plugin.for(self.class)
     @description = options[:description] || @plugin.description
@@ -129,7 +129,7 @@ class Aspect
   # Acceptor should return true if page would be accepted by this aspect.
   # Reimplement this method.
   def accepts?(page)
-    page.mime.to_s =~ /#{@accepts}/
+    page.mime.to_s =~ @accepts
   end
 
   # Render page content.

@@ -1,7 +1,7 @@
 description 'Document browser aspect'
 dependencies 'utils/shell'
 
-Aspect.create(:documentbrowser, :priority => 1, :layout => true, :cacheable => true, :accepts => 'application/pdf|postscript') do
+Aspect.create(:documentbrowser, :priority => 1, :layout => true, :cacheable => true, :accepts => %r{^application/pdf$|postscript$}) do
   def count_pages
     content = @page.content
     page_count = 0

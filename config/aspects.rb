@@ -178,7 +178,7 @@ end
 
 aspect :page do
   is_cacheable.needs_layout.has_priority(2)
-  accepts 'text/x-markdown(.kramdown)?'
+  accepts 'text/x-markdown(\.kramdown)?'
   filter do
     remove_comments.tag_shortcuts.markdown_nowiki
     tag(:disable => 'html:*') { kramdown! }
@@ -189,7 +189,7 @@ end
 
 aspect :s5 do
   is_cacheable
-  accepts 'text/x-markdown(.kramdown)?'
+  accepts 'text/x-markdown(\.kramdown)?'
   mime 'application/xhtml+xml; charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.markdown_nowiki
@@ -202,7 +202,7 @@ end
 
 aspect :latex do
   is_cacheable
-  accepts 'text/x-markdown(.kramdown)?'
+  accepts 'text/x-markdown(\.kramdown)?'
   mime 'text/plain; charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.markdown_nowiki
@@ -216,7 +216,7 @@ end
 
 aspect :page do
   is_cacheable.needs_layout.has_priority(3)
-  accepts 'text/x-markdown(.maruku)?'
+  accepts 'text/x-markdown(\.maruku)?'
   filter do
     remove_comments.tag_shortcuts.markdown_nowiki
     tag(:disable => 'html:*') { maruku! }
@@ -227,7 +227,7 @@ end
 
 aspect :s5 do
   is_cacheable
-  accepts 'text/x-markdown(.maruku)?'
+  accepts 'text/x-markdown(\.maruku)?'
   mime 'application/xhtml+xml; charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.markdown_nowiki
@@ -240,7 +240,7 @@ end
 
 aspect :latex do
   is_cacheable
-  accepts 'text/x-markdown(.maruku)?'
+  accepts 'text/x-markdown(\.maruku)?'
   mime 'text/plain; charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.markdown_nowiki

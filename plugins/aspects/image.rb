@@ -1,7 +1,7 @@
 description 'Image aspect'
 dependencies 'utils/image_magick'
 
-Aspect.create(:image, :priority => 5, :accepts => 'application/pdf|postscript|image/', :cacheable => true) do
+Aspect.create(:image, :priority => 5, :accepts => %r{^application/pdf$|postscript$|^image/}, :cacheable => true) do
   def call(context, page)
     geometry = context.params[:geometry]
     trim = context.params[:trim]
