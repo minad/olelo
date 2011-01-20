@@ -1,4 +1,4 @@
-description 'Adds links for section editing for creole-like headlines'
+description 'Adds links for section editing for kramdown and creole-like headlines'
 
 Page.attributes do
   boolean :no_editsection
@@ -8,10 +8,17 @@ NestingFilter.create :editsection do |context, content|
   if context[:preview] || !context.page.head? || context.page.attributes['no_editsection']
     subfilter(context, content)
   else
+    regexpstr = ""
+    if options[:mode] == "creole"
+      regexpstr = /^([ \t]*(=+)(.*?))=*\s*$/
+    elsif options[:mode] == "kramdown"                
+      regexpstr = /^([ \t]*(#+)\s(.*?))#*\s*$/
+    end  
+    puts regexpstr
     prefix = "EDIT#{object_id}X"
     len = content.length
     pos, off = [], 0
-    while (off = content.index(/^([ \t]*(=+)(.*?))=*\s*$/, off))
+    while (off = content.index(/#{regexpstr}/, off))
       pos << [$2.size, off, off + $1.size, $3.strip]
       off += $&.size
     end
