@@ -129,7 +129,7 @@ class Aspect
   # Acceptor should return true if page would be accepted by this aspect.
   # Reimplement this method.
   def accepts?(page)
-    page.mime.to_s =~ @accepts
+    !@accepts || page.mime.to_s =~ @accepts
   end
 
   # Render page content.

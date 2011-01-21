@@ -1,5 +1,5 @@
 description  'Markdown text filter'
-require             'rdiscount'
+require      'rdiscount'
 
 Filter.create :markdown do |context, content|
   ::RDiscount.new(content, :filter_html).to_html

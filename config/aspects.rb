@@ -60,7 +60,7 @@ aspect :page do
   is_cacheable.needs_layout.has_priority(1)
   accepts 'text/x-creole'
   filter do
-    editsection!(:mode => "creole") do
+    editsection do
       remove_comments.tag_shortcuts
       creole_nowiki.tag { creole!.rubypants }
     end
@@ -180,7 +180,7 @@ aspect :page do
   is_cacheable.needs_layout.has_priority(2)
   accepts 'text/x-markdown(\.kramdown)?'
   filter do
-    editsection!(:mode => "kramdown") do
+    editsection do
       remove_comments.tag_shortcuts.markdown_nowiki
       tag(:disable => 'html:*') { kramdown! }
     end

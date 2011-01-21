@@ -8,7 +8,7 @@ Filter.create :link_classifier do |context, content|
     classes = [link['class']].compact
     if href.starts_with?('http://') || href.starts_with?('https://')
       classes << 'external'
-    elsif !href.starts_with?('#')
+    elsif !href.empty? && !href.starts_with?('#')
       path, query = href.split('?')
       if path.starts_with? Config['base_path']
         path = path[Config['base_path'].length-1..-1]
