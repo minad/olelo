@@ -59,13 +59,14 @@ html, body {
   padding: 2.5em 3.5em;
   background: url(images/bg/content.png) top left repeat-x;
   dt {
+    font-weight: bold;
     background-color: #eee;
     padding: 2px; }
   dd {
     margin: 5px 0px 10px 20px;
     padding: 2px; 
     p, ul, ol, dl, table, pre, blockquote { 
-        margin-top: 0px;
+        margin-top: 0px;}
     }
   
   
@@ -82,6 +83,7 @@ html, body {
     font-size: 140%;
     background: white;
     font-weight: normal;
+    text-shadow: #888 1px 1px 2px;
     line-height: 1.2em;
     margin: 1em 0 0 0;
     padding: 0 0.2em;
