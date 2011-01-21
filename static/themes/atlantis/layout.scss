@@ -58,6 +58,17 @@ html, body {
   width: 100%;
   padding: 2.5em 3.5em;
   background: url(images/bg/content.png) top left repeat-x;
+  dt {
+    background-color: #eee;
+    padding: 2px; }
+  dd {
+    margin: 5px 0px 10px 20px;
+    padding: 2px; 
+    p, ul, ol, dl, table, pre, blockquote { 
+        margin-top: 0px;
+    }
+  
+  
 }
 
 #sidebar {
