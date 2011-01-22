@@ -106,13 +106,13 @@ ul.button-bar, ul.pagination {
 }
 
 table {
-  border-collapse: separate;
-  border-spacing: 0px;
+  border-collapse: collapse;
+  border: 1px solid #E5E5E5;
+  display: table;
   background: $border_color;
   padding: 1px;
   margin: 0 0 2em 0;
   td, th {
-    border-top: 1px solid #E5E5E5;
     padding: 0.2em 0.5em;
     &.link {
       padding: 0;
@@ -129,6 +129,12 @@ table {
       border-top: 0px none;
     }
   }
+  tbody {
+      border-top: 1px solid #E5E5E5;
+      display: table-row-group;
+      vertical-align: middle;
+  }
+  
   thead tr {
     background: url(images/bg/button.png) repeat-x left bottom $light_bg1;
     th {
@@ -136,6 +142,12 @@ table {
       border-top: 0px none;
     }
   }
+  tfoot {
+    border-top: 1px solid #E5E5E5;
+    display: table-footer-group;
+    vertical-align: middle;
+  }
+  
 }
 
 a {
