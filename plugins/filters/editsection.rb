@@ -35,7 +35,7 @@ NestingFilter.create :editsection do |context, content|
     content = subfilter(context, content)
     content.gsub!(/#{prefix}(\d+)/) do |match|
       i = $1.to_i
-      l = pos[i+1] ? pos[i+1][1] - pos[i][1] - 1 : len - pos[i][1]
+      l = pos[i+1] ? pos[i+1][1] - pos[i][1] : len - pos[i][1] 
       path = action_path(page, :edit) + "?pos=#{pos[i][1]}&len=#{l}&comment=#{:section_edited.t(:section => pos[i][3])}"
       %{<a class="editsection" href="#{escape_html path}" title="#{escape_html :edit_section.t(:section => pos[i][3])}">#{escape_html :edit.t}</a>}
     end
