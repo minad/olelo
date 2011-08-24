@@ -7,6 +7,10 @@ $.translations({
     de: {
       menu: 'Menü',
       tree: 'Baumansicht'
+    },
+    cs: {
+      menu: 'Menu',
+      tree: 'Strom'
     }
 });
 

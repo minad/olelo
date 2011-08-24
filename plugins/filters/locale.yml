@@ -8,3 +8,8 @@ de:
   attribute_no_editsection: 'Bearbeiten von Bereichen deaktivieren'
   edit_section: 'Bearbeite Bereich "#{section}"'
   section_edited: 'Bereich "#{section}" bearbeitet'
+cs_CZ:
+  attribute_toc: 'Vytvořit obsah'
+  attribute_no_editsection: 'Zablokovat editaci sekcí'
+  edit_section: 'Edituj sekci "#{section}"'
+  section_edited: 'Sekce "#{section}" editována'

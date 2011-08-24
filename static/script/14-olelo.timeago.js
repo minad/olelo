@@ -27,7 +27,20 @@
               n_months_ago:           'vor #{n} Monaten',
               one_year_ago:           'vor einem Jahr',
               over_n_years_ago:       'vor über #{n} Jahren'
-         }
+         },
+         cs: {
+              less_than_a_minute_ago: 'méně než 1 minuta',
+              a_minute_ago:           'před minutou',
+              n_minutes_ago:          'před #{n} minutami',
+              one_hour_ago:           'před hodinou',
+              n_hours_ago:            'před #{n} hodinami',
+              one_day_ago:            'jeden den',
+              n_days_ago:             'před #{n} dny',
+              one_month_ago:          'jeden měsíc',
+              n_months_ago:           'před #{n} měsíci',
+              one_year_ago:           '1 rok',
+              over_n_years_ago:       'před #{n} lety'
+         }        
     });
 
     function timeAgo(from) {

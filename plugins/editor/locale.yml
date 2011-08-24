@@ -10,3 +10,9 @@ de:
   captcha_invalid: 'Ungültiges Captcha'
   captcha_valid: 'Gültiges Captcha'
   preview: Vorschau
+cs_CZ:
+  captcha: 'Captcha:'
+  enter_captcha: 'Vložte laskavě captcha kód.'
+  captcha_invalid: 'Neplatný captcha kód'
+  captcha_valid: 'Platný captcha kód'
+  preview: 'Náhled'

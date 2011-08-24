@@ -12,3 +12,10 @@ de:
   group_acl:            'Zugriffslisten'
   persistent_login:     'Dauerhaft anmelden'
   login_first:          'Sie müssen sich zuerst anmelden'
+cs_CZ:
+  attribute_acl_write:  'Právo zápisu'
+  attribute_acl_create: 'Vytvářet podstránky'
+  attribute_acl_delete: 'Mazat podstránky'
+  group_acl:            'Řízení přístupů (ACL)'
+  persistent_login:     'Trvalé přihlášení'
+  login_first:          'Musíte se nejprve přihlásit'

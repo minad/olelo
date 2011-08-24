@@ -6,3 +6,7 @@ de:
   search_results: 'Suchergebnisse für #{pattern}'
   match:          'Ein Treffer'
   match_plural:   '#{count} Treffer'
+cs_CZ:
+  search_results: 'Výsledky hledání pro #{pattern}'
+  match:          'Jeden výsledek'
+  match_plural:   '#{count} výsledků' 

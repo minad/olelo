@@ -6,3 +6,7 @@ de:
   full_article:   'Ganzer Artikel'
   written_by:     'verfasst von #{author}'
   no_articles:    'Keine Artikel gefunden'
+cs_CZ:
+  full_article:   'Plný článek'
+  written_by:     'Napsal: #{author}'
+  no_articles:    'Žádné články nenalezeny'

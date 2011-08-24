@@ -8,7 +8,7 @@ en:
   math_latex:        'LaTeX Text'
   math_mathjax:      'MathJax MathML (Recommended, Javascript)'
 de:
-  attribute_math:   'LaTeX-Formel-Prozessor'
+  attribute_math:    'LaTeX-Formel-Prozessor'
   math_ritex:        'Ritex MathML'
   math_itex:         'Itex MathML'
   math_blahtexml:    'BlahTeX MathML (Empfohlen)'
@@ -16,3 +16,12 @@ de:
   math_google:       'Google Charts Bild (Nur kurze Formeln)'
   math_latex:        'LaTeX Text'
   math_mathjax:      'MathJax MathML (Empfohlen, Javascript)'
+cs_CZ:
+  attribute_math:    'Matem. procesor LaTeX'
+  math_ritex:        'Ritex MathML'
+  math_itex:         'Itex MathML'
+  math_blahtexml:    'BlahTeX MathML (doporučeno)'
+  math_blahteximage: 'BlahTeX Image'
+  math_google:       'Google Charts Image (pouze krátké výrazy)'
+  math_latex:        'LaTeX Text'
+  math_mathjax:      'MathJax MathML (doporučeno, Javascript)'

@@ -8,6 +8,10 @@
 	de: {
 	    confirmUnsaved: 'Die Seite wurde nicht gespeichert. Fortsetzen?',
 	    pageUnsaved: 'Die Seite wurde nicht gespeichert.'
+	},
+ 	cs: {
+	    confirmUnsaved: 'Stránka nebyla uložena. Pokračovat?',
+	    pageUnsaved: 'Stránka nebyla uložena.'
 	}
     });
 
