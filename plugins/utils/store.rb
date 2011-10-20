@@ -177,7 +177,7 @@ class Store
 
       def initialize(config)
         require 'dalli'
-        @server = ::Dalli.new(config[:server], :namespace => (config[:prefix] rescue nil))
+        @server = ::Dalli::Client.new(config[:server], :namespace => (config[:prefix] rescue nil))
       end
 
       # @override
