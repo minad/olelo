@@ -10,3 +10,7 @@ cs_CZ:
   full_article:   'Plný článek'
   written_by:     'Napsal: #{author}'
   no_articles:    'Žádné články nenalezeny'
+fr:
+  full_article:   "Article complet"
+  written_by:     "écrit par #{author}"
+  no_articles:    "Aucun article trouvé"

@@ -63,3 +63,25 @@ cs_CZ:
   information: 'Informace'
   type: 'Typ'
   value: 'Hodnota'
+fr:
+  attribute_aspect: "Aspect par défaut"
+  download: "Télécharger"
+  aspect_documentbrowser: "Explorateur de fichier"
+  aspect_download: "Téléchargement brut"
+  aspect_pageinfo: "Page d'information"
+  aspect_highlight: "Source mise en valeur"
+  aspect_imageinfo: "Information sur l'image"
+  aspect_image: "Image brute"
+  aspect_source: "Source de la page"
+  aspect_subpages: "Sous-pages"
+  aspect_text: "Téléchargement en texte"
+  aspect_gallery: "Galerie d'images"
+  aspect_s5: "Presentation S5 "
+  aspect_latex: "LaTeX"
+  aspect_not_available: "L'aspect #{aspect} n'est pas disponible pour la page #{page} avec le type #{type}."
+  entry: "Entrée"
+  exif: "Information EXIF"
+  geometry: "Geometrie"
+  information: "Information"
+  type: "Type"
+  value: "Valeur"

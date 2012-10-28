@@ -12,6 +12,10 @@ $(function() {
 	cs: {
 	    menu: 'Menu',
 	    tree: 'Strom'
+	},
+	fr: {
+	    menu: 'Menu',
+	    tree: 'Arbre'
 	}
     });
 

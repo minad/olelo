@@ -40,7 +40,20 @@
               n_months_ago:           'před #{n} měsíci',
               one_year_ago:           '1 rok',
               over_n_years_ago:       'před #{n} lety'
-         }        
+         },
+         fr: {
+              less_than_a_minute_ago: "il y a moins d'une minute",
+              a_minute_ago:           "il y a une minute",
+              n_minutes_ago:          "il y a #{n} minutes",
+              one_hour_ago:           "il y a 1 heure",
+              n_hours_ago:            "il y a #{n} heures",
+              one_day_ago:            "il y a 1 jour",
+              n_days_ago:             "il y a #{n} jours",
+              one_month_ago:          "il y a 1 mois",
+              n_months_ago:           "il y a #{n} mois",
+              one_year_ago:           "il y a 1 an",
+              over_n_years_ago:       "il y a plus de #{n} ans" 
+         }
     });
 
     function timeAgo(from) {

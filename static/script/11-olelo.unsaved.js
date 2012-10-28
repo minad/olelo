@@ -12,6 +12,10 @@
  	cs: {
 	    confirmUnsaved: 'Stránka nebyla uložena. Pokračovat?',
 	    pageUnsaved: 'Stránka nebyla uložena.'
+	},
+	fr: {
+	    confirmUnsaved: "La page n'a pas été enregistrée. Voulez vous continuer ?",
+	    pageUnsaved: "La page n'a pas été enregistrée."
 	}
     });
 

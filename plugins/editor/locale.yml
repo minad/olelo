@@ -13,3 +13,8 @@ cs_CZ:
   captcha_invalid: 'Neplatný captcha kód'
   captcha_valid: 'Platný captcha kód'
   preview: 'Náhled'
+fr:
+  enter_captcha: "Veuillez entrer le captcha."
+  captcha_invalid: "Captcha invalide"
+  captcha_valid: "Captcha valide"
+  preview: "Prévisualisez"

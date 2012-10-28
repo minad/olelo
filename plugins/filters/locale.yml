@@ -13,3 +13,8 @@ cs_CZ:
   attribute_no_editsection: 'Zablokovat editaci sekcí'
   edit_section: 'Edituj sekci "#{section}"'
   section_edited: 'Sekce "#{section}" editována'
+fr:
+  attribute_toc: "Générer Table des Matières"
+  attribute_no_editsection: "Désactiver l'édition"
+  edit_section: "Éditer la section \"#{section}\""
+  section_edited: "Section \"#{section}\" éditée"

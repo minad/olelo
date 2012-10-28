@@ -16,3 +16,9 @@ cs_CZ:
   attribute_acl_delete: 'Mazat podstránky'
   group_acl:            'Řízení přístupů (ACL)'
   login_first:          'Musíte se nejprve přihlásit'
+fr:
+  attribute_acl_write:  "Accès en écriture"
+  attribute_acl_create: "Créer sous-pages"
+  attribute_acl_delete: "Supprimer sous-pages"
+  group_acl:            "Liste de contrôle des accès"
+  login_first:          "Vous devez d'abord vous connecter"
