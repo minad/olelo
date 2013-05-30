@@ -171,7 +171,7 @@ class RuggedRepository < Repository
   def initialize(config)
     @git = Rugged::Repository.new(config[:path])
     Olelo.logger.info "Opening git repository: #{config[:path]}"
-  rescue Rugged::Error
+  rescue IOError
     Olelo.logger.info "Creating git repository: #{config[:path]}"
     FileUtils.mkpath(config[:path])
     @git = Rugged::Repository.init_at(config[:path], config[:bare])
