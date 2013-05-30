@@ -152,19 +152,13 @@ class RuggedRepository < Repository
 
       user = User.current
       author = {email: user.email, name: user.name, time: Time.now }
-      commit = Rugged::Commit.create(@git,
-                                     author: author,
-                                     message: comment,
-                                     committer: author,
-                                     parents: [@head],
-                                     tree: @tree.save)
-
-      raise 'Concurrent transactions' if @head != current_head
-      if current_head
-        @git.head.target = commit
-      else
-        Rugged::Reference.create(@git, "refs/heads/master", commit)
-      end
+      Rugged::Commit.create(@git,
+                            author: author,
+                            message: comment,
+                            committer: author,
+                            parents: [@head],
+                            tree: @tree.save,
+                            update_ref: 'HEAD')
     end
 
     private
@@ -177,7 +171,7 @@ class RuggedRepository < Repository
   def initialize(config)
     @git = Rugged::Repository.new(config[:path])
     Olelo.logger.info "Opening git repository: #{config[:path]}"
-  rescue Rugged::OSError
+  rescue Rugged::Error
     Olelo.logger.info "Creating git repository: #{config[:path]}"
     FileUtils.mkpath(config[:path])
     @git = Rugged::Repository.init_at(config[:path], config[:bare])
@@ -419,14 +413,14 @@ class RuggedRepository < Repository
   def oid_by_path(commit, path)
     return commit.tree_oid if path.blank?
     commit.tree.path(path)[:oid]
-  rescue Rugged::IndexerError
+  rescue Rugged::Error
     nil
   end
 
   def object_by_path(commit, path)
     return commit.tree if path.blank?
     @git.lookup(commit.tree.path(path)[:oid])
-  rescue Rugged::IndexerError
+  rescue Rugged::Error
     nil
   end
 
