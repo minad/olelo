@@ -69,7 +69,6 @@ describe 'requests' do
       use Rack::Session::Pool
       use Rack::MethodOverride
       use Olelo::Middleware::ForceEncoding
-      use Olelo::Middleware::UAHeader
       #use Rack::RelativeRedirect
       run Olelo::Application.new
     end

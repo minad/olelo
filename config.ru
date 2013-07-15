@@ -95,8 +95,6 @@ use Rack::Session::Cookie, key: 'olelo.session', secret: Olelo::Config['rack.ses
 #require 'rack/perftools_profiler'
 #use Rack::PerftoolsProfiler
 
-use Olelo::Middleware::UAHeader
-
 class LoggerOutput
   def initialize(logger); @logger = logger; end
   def write(text); @logger << text; end
