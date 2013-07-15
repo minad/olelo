@@ -75,7 +75,13 @@ Olelo::Initializer.initialize(logger)
 # end
 
 use Rack::Runtime
-use Rack::ShowExceptions unless Olelo::Config['production']
+
+if Olelo::Config['production']
+  require 'rack/protection'
+  use Rack::Protection
+else
+  use Rack::ShowExceptions
+end
 
 if Olelo::Config['rack.deflater']
   use Rack::Deflater

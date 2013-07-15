@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('slim', ['~> 2.0.0'])
   s.add_runtime_dependency('moneta', ['~> 0.7.0'])
   s.add_runtime_dependency('rouge', ['~> 0.3.6'])
+  s.add_runtime_dependency('rack-protection', ['~> 1.5.0'])
 
   s.add_development_dependency('bacon', ['~> 1.1.0'])
   s.add_development_dependency('rack-test', ['~> 0.6.2'])
