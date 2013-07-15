@@ -21,7 +21,7 @@ class RuggedRepository < Repository
     end
 
     def save
-      Rugged::Blob.create(@git, @content)
+      @git.write(@content, :blob)
     end
   end
 

@@ -6,11 +6,11 @@ RECAPTCHA_PRIVATE = Config['recaptcha.private']
 
 class ::Olelo::Application
   hook :head do
-    %{<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"/>
+    %{<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 <script type="text/javascript">
   $(function() {
     Recaptcha.create('#{RECAPTCHA_PUBLIC}',
-      'recaptcha', {
+      'recaptcha_field', {
         theme: 'clean',
         callback: Recaptcha.focus_response_field
     });
@@ -21,7 +21,7 @@ class ::Olelo::Application
   %w(edit attributes upload).each do |action|
     before "#{action}_buttons" do
       if flash[:show_captcha] && action?(action)
-        %{<br/><div id="recaptcha"></div><br/>}
+        %{<br/><div id="recaptcha_field"></div><br/>}
       end
     end
 

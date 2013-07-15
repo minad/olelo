@@ -89,7 +89,6 @@ use Rack::Session::Cookie, key: 'olelo.session', secret: Olelo::Config['rack.ses
 #require 'rack/perftools_profiler'
 #use Rack::PerftoolsProfiler
 
-use Olelo::Middleware::DegradeMimeType
 use Olelo::Middleware::UAHeader
 
 class LoggerOutput

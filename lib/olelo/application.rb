@@ -37,7 +37,7 @@ module Olelo
         User.current ||= User.anonymous(request)
       end
 
-      response['Content-Type'] = 'application/xhtml+xml;charset=utf-8'
+      response['Content-Type'] = 'text/html;charset=utf-8'
     end
 
     # Executed after each request

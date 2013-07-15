@@ -32,7 +32,6 @@ require 'olelo/initializer'
 require 'olelo/application'
 require 'olelo/version'
 
-require 'olelo/middleware/degrade_mime_type'
 require 'olelo/middleware/ua_header'
 require 'olelo/middleware/force_encoding'
 require 'olelo/middleware/static_cache'
