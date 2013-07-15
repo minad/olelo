@@ -44,7 +44,6 @@ table#subpages
           a.action-delete href=build_path(child, action: :delete) title=:delete.t = :delete.t
 = pagination(@page, @page_count, @page_nr, aspect: 'subpages')
 
-__END__
 @@ locale.yml
 cs:
   actions:         'Akce'
