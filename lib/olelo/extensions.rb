@@ -1,7 +1,4 @@
 class Module
-  # HACK: private_constant was introduced in 1.9.3
-  def private_constant(*args); end unless respond_to?(:private_constant)
-
   # Generate accessor method with question mark
   #
   # @param [String, Symbol...] attrs Attributes to generate setter for
