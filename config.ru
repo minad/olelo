@@ -75,13 +75,7 @@ Olelo::Initializer.initialize(logger)
 # end
 
 use Rack::Runtime
-
-if Olelo::Config['production']
-  require 'rack/protection'
-  use Rack::Protection
-else
-  use Rack::ShowExceptions
-end
+use Rack::ShowExceptions unless Olelo::Config['production']
 
 if Olelo::Config['rack.deflater']
   use Rack::Deflater
@@ -91,6 +85,11 @@ use Olelo::Middleware::StaticCache
 use Rack::Static, urls: ['/static'], root: app_path
 
 use Rack::Session::Cookie, key: 'olelo.session', secret: Olelo::Config['rack.session_secret']
+
+if Olelo::Config['production']
+  require 'rack/protection'
+  use Rack::Protection
+end
 
 #require 'rack/perftools_profiler'
 #use Rack::PerftoolsProfiler
