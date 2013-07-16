@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.description       = 'Olelo is a git-based wiki which supports many markup languages, tags, embedded TeX and much more. It can be extended through plugins.'
   s.homepage          = 'http://gitwiki.org/'
   s.rubyforge_project = s.name
+  s.license = 'MIT'
 
   s.files         = `git ls-files | grep -P -v '^tools/'`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
