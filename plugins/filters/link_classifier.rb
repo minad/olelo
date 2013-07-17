@@ -9,7 +9,7 @@ Filter.create :link_classifier do |context, content|
     if href.starts_with?('http://') || href.starts_with?('https://')
       classes << 'external'
     elsif !href.empty? && !href.starts_with?('#')
-      path, query = href.split('?')
+      path, query = href.split(/[?#]/, 2)
       if path.starts_with? Config['base_path']
         path = path[Config['base_path'].length..-1]
       elsif !path.starts_with? '/'
