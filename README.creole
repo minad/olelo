@@ -80,7 +80,16 @@ For production purposes, I recommend that you deploy the wiki with [[http://unic
 $ unicorn path-to/config.ru
 }}}
 
-Unicorn is a very flexible ruby application server and Ōlelo runs very well on it. You can adapt the number of Unicorn workers depending on the load you expect. It is a good idea to observe the Unicorn workers as described in https://github.com/blog/519-unicorn-god and kill missbehaving workers if necessary.
+Unicorn is a very flexible ruby application server and Ōlelo runs very well on it. You can adapt the number of Unicorn workers depending on the load you expect. It is a good idea to observe the Unicorn workers as described in https://github.com/blog/519-unicorn-god and kill missbehaving workers if necessary. You can call this snippet in a cronjob which terminates all workers gracefully that need more than 100M.
+
+{{{
+#!/bin/bash
+ps -e -www -o pid,rss,command | grep '[u]nicorn worker' | while read -r -a a; do
+        pid=${a[0]}
+        mem=${a[1]}
+        [[ "$mem" -gt 100000 ]] && kill -s QUIT $pid
+done
+}}}
 
 == Configuration
 
