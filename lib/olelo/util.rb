@@ -51,11 +51,18 @@ module Olelo
     end
 
     def yaml_load_file(file)
-      yaml_load(File.read(file))
+      File.open(file, 'r:bom|utf-8') {|f| yaml_load(f.read) }
     end
 
-    def yaml_load(content)
-      Psych.safe_load(content)
+    if Psych.respond_to? :safe_load
+      def yaml_load(content)
+        Psych.safe_load(content)
+      end
+    else
+      puts 'WARNING: Psych doesn\'t support safe_load. Potentially unsafe YAML files might be loaded.'
+      def yaml_load(content)
+        Psych.load(content)
+      end
     end
 
     def yaml_dump(object)
