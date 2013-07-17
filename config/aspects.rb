@@ -53,7 +53,7 @@ regexp :mediawiki_nowiki,  /<nowiki>.*?<\/nowiki>/m,    '<notags>\0</notags>'
 #
 ################################################################################
 
-interwiki_map = yaml_load_file(File.join(Config['config_path'], 'interwiki.yml'))
+interwiki_map = Util.yaml_load_file(File.join(Config['config_path'], 'interwiki.yml'))
 
 ################################################################################
 # Creole aspects configuration
