@@ -23,7 +23,7 @@ module Olelo
 
     def init_locale
       Locale.locale = Config['locale']
-      Locale.add(YAML.load_file(File.join(File.dirname(__FILE__), 'locale.yml')))
+      Locale.add(yaml_load_file(File.join(File.dirname(__FILE__), 'locale.yml')))
     end
 
     def init_templates
@@ -38,7 +38,7 @@ module Olelo
       # Load locale provided by plugin
       Plugin.after(:load) do
         virtual_fs.glob('locale.yml') do |fs, name|
-          Locale.add(YAML.load(fs.read(name)))
+          Locale.add(yaml_load(fs.read(name)))
         end
       end
 

@@ -203,7 +203,7 @@ class RuggedRepository < Repository
 
   def set_attributes(path, attributes)
     check_path(path)
-    attributes = attributes.blank? ? nil : YAML.dump(attributes).sub(/\A\-\-\-\s*\n/s, '')
+    attributes = attributes.blank? ? nil : yaml_dump(attributes).sub(/\A\-\-\-\s*\n/s, '')
     expand_tree(path)
     if attributes
       work_tree[path + ATTRIBUTE_EXT] = Blob.new(@git, attributes)
@@ -337,7 +337,7 @@ class RuggedRepository < Repository
     raise 'Not a commit' unless Rugged::Commit === commit
     path += ATTRIBUTE_EXT
     object = object_by_path(commit, path)
-    object ? YAML.load(object.content) : {}
+    object ? yaml_load(object.content) : {}
   end
 
   def diff(path, from, to)

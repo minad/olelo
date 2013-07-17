@@ -42,7 +42,7 @@ module Olelo
     end
 
     def load!(file)
-      update(YAML.load_file(file))
+      update(Util.yaml_load_file(file))
     end
 
     def each(&block)

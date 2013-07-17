@@ -92,7 +92,7 @@ class GitrbRepository < Repository
   def get_attributes(path, version)
     check_path(path)
     object = get_object(path + ATTRIBUTE_EXT, version)
-    object && object.type == :blob ? YAML.load(object.data) : {}
+    object && object.type == :blob ? yaml_load(object.data) : {}
   end
 
   # @override
@@ -115,7 +115,7 @@ class GitrbRepository < Repository
   # @override
   def set_attributes(path, attributes)
     check_path(path)
-    attributes = attributes.blank? ? nil : YAML.dump(attributes).sub(/\A\-\-\-\s*\n/s, '')
+    attributes = attributes.blank? ? nil : yaml_dump(attributes).sub(/\A\-\-\-\s*\n/s, '')
     expand_tree(path)
     if attributes
       @git.root[path + ATTRIBUTE_EXT] = Gitrb::Blob.new(data: attributes)

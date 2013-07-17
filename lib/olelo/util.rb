@@ -50,6 +50,18 @@ module Olelo
       raise MultiError, errors if !errors.empty?
     end
 
+    def yaml_load_file(file)
+      yaml_load(File.read(file))
+    end
+
+    def yaml_load(content)
+      Psych.safe_load(content)
+    end
+
+    def yaml_dump(object)
+      Psych.dump(object)
+    end
+
     # Like CGI.escape but escapes space not as +
     def escape(s)
       s = s.to_s
