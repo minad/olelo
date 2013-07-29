@@ -30,7 +30,7 @@ $(function() {
     $('#content').bind('pageLoaded', pageLoaded);
     pageLoaded.apply($(document));
 
-    $('button[data-target]').live('click', function() {
+    $(document).on('click', 'button[data-target]', function() {
 	var button = $(this);
 	var form = $(this.form);
 	button.addClass('loading');
