@@ -1,12 +1,17 @@
 description    'Tag to embed github gist'
 export_scripts 'gist-embed.css'
-require 'open-uri'
+require 'faraday_middleware'
 
 Tag.define :gist, requires: 'id' do |context, attrs|
   if attrs['id'] =~ /\A\d+\Z/
-    body = open("https://gist.github.com/#{attrs['id']}.json").read
-    gist = MultiJson.load(body)
-    gist['div'].gsub('&nbsp;', '&#8239;')
+    conn = Faraday.new 'https://gist.github.com' do |c|
+      c.use FaradayMiddleware::ParseJson,       content_type: 'application/json'
+      c.use FaradayMiddleware::FollowRedirects
+      c.use Faraday::Response::RaiseError
+      c.adapter Faraday.default_adapter
+    end
+    response = conn.get("/#{attrs['id']}.json")
+    response.body['div']
   else
     raise ArgumentError, 'Invalid gist id'
   end
