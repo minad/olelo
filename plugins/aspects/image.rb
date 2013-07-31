@@ -2,7 +2,7 @@
 description 'Image aspect'
 dependencies 'utils/image_magick'
 
-Aspect.create(:image, priority: 5, accepts: %r{^application/pdf$|postscript$|^image/}, cacheable: true) do
+Aspect.create(:image, priority: 5, accepts: %r{\Aapplication/pdf\Z|postscript\Z|\Aimage/}, cacheable: true) do
   def call(context, page)
     geometry = context.params[:geometry]
     trim = context.params[:trim]
@@ -17,7 +17,7 @@ Aspect.create(:image, priority: 5, accepts: %r{^application/pdf$|postscript$|^im
       end
       cmd.convert('-depth', 8, '-quality', 50) do |args|
         args << '-trim' if trim
-        args << '-thumbnail' << geometry if geometry =~ /^(\d+)?x?(\d+)?[%!<>]*$/
+        args << '-thumbnail' << geometry if geometry =~ /\A(\d+)?x?(\d+)?[%!<>]*\Z/
         if ps
           args << '-'
         else
@@ -30,7 +30,7 @@ Aspect.create(:image, priority: 5, accepts: %r{^application/pdf$|postscript$|^im
     elsif page.mime.to_s =~ /svg/ || geometry || trim
       cmd = ImageMagick.convert do |args|
         args << '-trim' if trim
-        args << '-thumbnail' << geometry if geometry =~ /^(\d+)?x?(\d+)?[%!<>]*$/
+        args << '-thumbnail' << geometry if geometry =~ /\A(\d+)?x?(\d+)?[%!<>]*\Z/
         args << '-' << (page.mime.to_s == 'image/jpeg' ? 'JPEG:-' : 'PNG:-')
       end
       context.header['Content-Type'] = 'image/png'

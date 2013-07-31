@@ -68,7 +68,7 @@ module Olelo
             code, data = File.read(@file).split('__END__', 2)
             content = nil
             data.to_s.each_line do |line|
-            if line =~ /^@@\s*([^\s]+)\s*/
+            if line =~ /\A@@\s*([^\s]+)\s*/
               if name == $1
                 content = ''
               elsif content
@@ -86,7 +86,7 @@ module Olelo
       def glob(*names)
         code, data = File.read(@file).split('__END__', 2)
         data.to_s.each_line do |line|
-          if line =~ /^@@\ss*([^\s]+)\s*/ && names.any? {|pattern| File.fnmatch(pattern, $1) }
+          if line =~ /\A@@\ss*([^\s]+)\s*/ && names.any? {|pattern| File.fnmatch(pattern, $1) }
             yield(self, $1)
           end
         end

@@ -326,7 +326,7 @@ module Olelo
 <link rel="stylesheet" href="#{escape_html build_static_path("themes/#{Config['theme']}/style.css")}" type="text/css"/>
 <script src="#{escape_html build_static_path("script.js")}" type="text/javascript"></script>}
       # Add base path to root page to fix links in history browsing and for wikis with base_path
-      base_path = if request.path_info =~ %r{^/version/[^/]+$} ||
+      base_path = if request.path_info =~ %r{\A/version/[^/]+\Z} ||
                       (request.path_info == '/' && Config['base_path'] != '/')
         url = request.base_url << [Config['base_path'], '/', request.path_info, '/'].join.gsub(%r{/+}, '/')
         %{<base href="#{escape_html url}"/>}

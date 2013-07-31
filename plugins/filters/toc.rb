@@ -18,7 +18,7 @@ Filter.create :toc do |context, content|
   offset = elem ? elem.name[1..1].to_i - 1 : 0
 
   doc.traverse do |child|
-    if child.name =~ /^h(\d)$/
+    if child.name =~ /\Ah(\d)\Z/
       nr = $1.to_i - offset
       if nr > level
         while nr > level

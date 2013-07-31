@@ -16,7 +16,7 @@ module Olelo
       # @return [void]
       #
       def add(locale)
-        @translations.update(locale[$1] || {}) if @locale =~ /^(\w+)(_|-)/
+        @translations.update(locale[$1] || {}) if @locale =~ /\A(\w+)(_|-)/
         @translations.update(locale[@locale] || {})
         @translations.each_value(&:freeze)
       end
