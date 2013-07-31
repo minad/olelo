@@ -1,6 +1,5 @@
 description 'Proprietary web portal based user storage'
-require 'open-uri'
-require 'openssl'
+require 'faraday'
 
 class PortalService < User::Service
   def initialize(config)
@@ -9,9 +8,9 @@ class PortalService < User::Service
 
   # @override
   def authenticate(name, password)
-    xml = open(@url,
-               ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE,
-               http_basic_authentication: [name, password]).read
+    conn = Faraday.new(@url)
+    conn.basic_auth(name, password)
+    xml = conn.get(@url)
     # User data is exposed via REST/XML-API
     doc = Nokogiri::XML(xml)
     email = (doc/'person/email').text
