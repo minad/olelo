@@ -78,7 +78,7 @@ class Aspect
     @hidden      = !!options[:hidden]
     @cacheable   = !!options[:cacheable]
     @priority    = (options[:priority] || 99).to_i
-    @accepts     = String === options[:accepts] ? /^(?:#{options[:accepts]})$/ : options[:accepts]
+    @accepts     = String === options[:accepts] ? /\A(?:#{options[:accepts]})\Z/ : options[:accepts]
     @mime        = options[:mime]
     @plugin      = options[:plugin] || Plugin.for(self.class)
     @description = options[:description] || @plugin.description

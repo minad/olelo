@@ -24,7 +24,7 @@ module Olelo
     # @api public
     PATH_PATTERN = '[^\s](?:.*[^\s]+)?'.freeze
 
-    PATH_REGEXP = /^#{PATH_PATTERN}$/
+    PATH_REGEXP = /\A#{PATH_PATTERN}\Z/
     private_constant :PATH_REGEXP
 
     # Mime type for empty page

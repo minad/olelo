@@ -59,7 +59,7 @@ class ::Olelo::Plugin
 
   def export_scripts(*files)
     virtual_fs.glob(*files) do |fs, name|
-      raise 'Invalid script type' if name !~ /\.(css|js)$/
+      raise 'Invalid script type' if name !~ /\.(css|js)\Z/
       export_code($1, "/* #{path/name} */\n#{fs.read(name)}\n")
     end
   end

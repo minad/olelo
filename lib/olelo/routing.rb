@@ -171,7 +171,7 @@ module Olelo
           keys << $1
           patterns.key?($1) ? "(#{patterns[$1]})" : "([^/?&#\.]+)"
         end
-        pattern = /^#{pattern}$/
+        pattern = /\A#{pattern}\Z/
 
         if i = @head.index {|x| x.first == path }
           @head[i] = [path, pattern, keys, function]

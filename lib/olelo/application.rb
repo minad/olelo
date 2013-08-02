@@ -20,7 +20,7 @@ module Olelo
       path.starts_with?('/static') ||
       router.any? do |method, r|
         r.any? do |name,pattern,keys,function|
-          name !~ /^\/\(?:path\)?$/ && pattern.match(path)
+          name !~ /\A\/\(?:path\)?\Z/ && pattern.match(path)
         end
       end
     end
