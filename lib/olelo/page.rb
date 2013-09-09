@@ -6,6 +6,7 @@ module Olelo
     include Attributes
 
     has_around_hooks :move, :delete, :save
+    has_hooks :after_commit
 
     attributes do
       string  :title
@@ -241,6 +242,9 @@ module Olelo
 
     def after_commit(&block)
       Page.current_transaction << block
+      Page.current_transaction << Proc.new do
+        invoke_hook :after_commit
+      end
     end
 
     def self.check_path(path)
