@@ -175,7 +175,6 @@ class FilterDSL
 
     def mime(mime);         @options[:mime] = mime;       self; end
     def accepts(accepts);   @options[:accepts] = accepts; self; end
-    def needs_layout;       @options[:layout] = true;     self; end
     def has_priority(prio); @options[:priority] = prio;   self; end
     def is_cacheable;       @options[:cacheable] = true;  self; end
     def is_hidden;          @options[:hidden] = true;     self; end

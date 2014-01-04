@@ -67,25 +67,29 @@ class Aspect
     end
   end
 
+  FRAGMENT_MIME = 'text/x-html-fragment'
+
   # Constructor for aspect
   # Options:
-  # * layout: Aspect output should be wrapped in HTML layout (Not used for download/image aspects for example)
   # * priority: Aspect priority. The aspect with the lowest priority will be used for a page.
   # * cacheable: Aspect is cacheable
   def initialize(name, options)
     @name        = name.to_s
-    @layout      = !!options[:layout]
     @hidden      = !!options[:hidden]
     @cacheable   = !!options[:cacheable]
     @priority    = (options[:priority] || 99).to_i
-    @accepts     = String === options[:accepts] ? /\A(?:#{options[:accepts]})\Z/ : options[:accepts]
-    @mime        = options[:mime]
+    @accepts     = Regexp === options[:accepts] ? options[:accepts] : /\A(?:#{options[:accepts]})\Z/
+    @mime        = options.include?(:mime) ? options[:mime] : FRAGMENT_MIME
     @plugin      = options[:plugin] || Plugin.for(self.class)
     @description = options[:description] || @plugin.description
   end
 
   attr_reader :name, :priority, :mime, :accepts, :description, :plugin
-  attr_reader? :layout, :hidden, :cacheable
+  attr_reader? :hidden, :cacheable
+
+  def layout?
+    mime == FRAGMENT_MIME
+  end
 
   # Aspects hash
   def self.aspects
@@ -119,7 +123,12 @@ class Aspect
   def self.find!(page, options = {})
     options[:name] ||= page.attributes['aspect']
     aspects = options[:name] ? @aspects[options[:name].to_s] : @aspects.values.flatten
-    aspect = aspects.to_a.sort_by(&:priority).find {|a| a.accepts?(page) && (!options[:layout] || a.layout?) }
+    aspects = aspects.to_a.sort_by(&:priority).select {|a| a.accepts?(page) && (!options[:layout] || a.layout?) }
+
+    puts "PREF #{options[:preferred_mime]}"
+
+
+    aspect = (options[:preferred_mime] && aspects.find {|a| a.mime.include?(options[:preferred_mime]) }) || aspects.first
     raise NotAvailable.new(options[:name], page) if !aspect
     aspect.dup
   end
@@ -162,15 +171,24 @@ end
 class ::Olelo::Application
   def show_page
     params[:aspect] ||= 'subpages' if params[:path].to_s.ends_with? '/'
-    @selected_aspect, layout, header, content =
-    cache(['aspect', page.path, page.etag, params], update: no_cache?, defer: true) do |cache|
-      aspect = Aspect.find!(page, name: params[:aspect])
+
+    env['HTTP_ACCEPT'].to_s =~ %r{[\w\.\+\-\*]+/[\*\w\.\+\-]+}
+    preferred_mime = $&
+
+    @selected_aspect, cacheable, layout, header, content =
+    cache(['aspect', page.path, page.etag, params, preferred_mime], update: no_cache?, defer: true) do |cache|
+      aspect = Aspect.find!(page, name: params[:aspect], preferred_mime: preferred_mime)
       cache.disable! if !aspect.cacheable?
       context = Context.new(page: page, params: params, request: request)
+      context.header['Content-Type'] = aspect.mime ? aspect.mime.to_s : page.mime.to_s unless aspect.layout?
       result = aspect.call(context, page)
-      context.header['Content-Type'] ||= aspect.mime.to_s if aspect.mime
-      context.header['Content-Type'] ||= page.mime.to_s if !aspect.layout?
-      [aspect.name, aspect.layout?, context.header.to_hash, result]
+      [aspect.name, aspect.cacheable?, aspect.layout?, context.header.to_hash, result]
+    end
+
+    if cacheable
+      response['Vary'] = 'Accept'
+    else
+      cache_control no_cache: true
     end
 
     self.response.header.merge!(header)
@@ -178,6 +196,7 @@ class ::Olelo::Application
     layout ? render(:show, locals: {content: content}) : content
   rescue Aspect::NotAvailable => ex
     cache_control no_cache: true
+    raise unless http_accept? /html/
     redirect build_path(page.path) if params[:path].to_s.ends_with? '/'
     raise if params[:aspect]
     flash.error ex.message

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 description 'Download aspect'
 
-Aspect.create(:download) do
+Aspect.create(:download, mime: nil) do
   def accepts?(page); !page.content.empty?; end
   def call(context, page)
     name = page.root? ? :root.t : page.name.gsub(/[^\w.\-_]/, '_')

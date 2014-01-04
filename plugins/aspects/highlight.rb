@@ -2,7 +2,7 @@
 description  'Source code highlighting aspect'
 dependencies 'utils/rouge'
 
-Aspect.create(:highlight, priority: 2, layout: true, cacheable: true) do
+Aspect.create(:highlight, priority: 2, cacheable: true) do
   def accepts?(page)
     !page.content.empty? && ::Rouge::Lexer.guesses(:mimetype => page.mime.to_s).size == 1
   end

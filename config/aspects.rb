@@ -29,7 +29,6 @@ regexp :mediawiki_nowiki,  /<nowiki>.*?<\/nowiki>/m,    '<notags>\0</notags>'
 #
 # aspect :aspect_name do          # Create aspect with name "aspect_name"
 #  is_cacheable                   # Aspect supports caching (renders static content)
-#  needs_layout                   # Aspect needs a html layout around the generated content
 #  has_priority 1                 # Aspect has priority 1, lower priorities are preferred
 #  accepts 'text/x-creole'        # Accepted mime types. This is a regular expression
 #  mime    'text/html'            # Generated mime type. Only interesting for aspects which don't need a layout.
@@ -60,14 +59,14 @@ interwiki_map = Util.yaml_load_file(File.join(Config['config_path'], 'interwiki.
 ################################################################################
 
 aspect :page do
-  is_cacheable.needs_layout.has_priority(1)
+  is_cacheable.has_priority(1)
   accepts 'text/x-creole'
   filter do
     editsection do
       remove_comments.tag_shortcuts
       creole_nowiki.tag { creole!.rubypants }
     end
-    fix_image_links.toc
+    create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
   end
 end
@@ -75,11 +74,11 @@ end
 aspect :s5 do
   is_cacheable
   accepts 'text/x-creole'
-  mime 'application/xhtml+xml; charset=utf-8'
+  mime 'text/html;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts
     creole_nowiki.tag { creole!.rubypants }
-    fix_image_links.toc
+    create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
     html_wrapper!.s5!
   end
@@ -88,7 +87,7 @@ end
 aspect :latex do
   is_cacheable
   accepts 'text/x-creole'
-  mime 'text/plain; charset=utf-8'
+  mime 'text/plain;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.creole_nowiki
     tag(static: true) { creole!.rubypants }
@@ -102,14 +101,14 @@ end
 ################################################################################
 
 aspect :page do
-  is_cacheable.needs_layout.has_priority(1)
+  is_cacheable.has_priority(1)
   accepts 'text/x-mediawiki'
   filter do
     editsection do
       remove_comments.tag_shortcuts
       mediawiki_nowiki.tag { mediawiki!.rubypants }
     end
-    fix_image_links.toc
+    create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
   end
 end
@@ -117,11 +116,11 @@ end
 aspect :s5 do
   is_cacheable
   accepts 'text/x-mediawiki'
-  mime 'application/xhtml+xml; charset=utf-8'
+  mime 'text/html;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts
     mediawiki_nowiki.tag { mediawiki!.rubypants }
-    fix_image_links.toc
+    create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
     html_wrapper!.s5!
   end
@@ -130,7 +129,7 @@ end
 aspect :latex do
   is_cacheable
   accepts 'text/x-mediawiki'
-  mime 'text/plain; charset=utf-8'
+  mime 'text/plain;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.mediawiki_nowiki
     tag(static: true) { mediawiki!.rubypants }
@@ -144,12 +143,12 @@ end
 ################################################################################
 
 aspect :page do
-  is_cacheable.needs_layout.has_priority(1)
+  is_cacheable.has_priority(1)
   accepts 'text/x-textile'
   filter do
     remove_comments.tag_shortcuts.textile_nowiki
     tag(disable: 'html:*') { textile!.rubypants }
-    fix_image_links.toc
+    create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
   end
 end
@@ -157,11 +156,11 @@ end
 aspect :s5 do
   is_cacheable
   accepts 'text/x-textile'
-  mime 'application/xhtml+xml; charset=utf-8'
+  mime 'text/html;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.textile_nowiki
     tag(disable: 'html:*') { textile!.rubypants }
-    fix_image_links.toc
+    create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
     html_wrapper!.s5!
   end
@@ -170,7 +169,7 @@ end
 aspect :latex do
   is_cacheable
   accepts 'text/x-textile'
-  mime 'text/plain; charset=utf-8'
+  mime 'text/plain;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.textile_nowiki
     tag(static: true, disable: 'html:*') { textile!.rubypants }
@@ -184,14 +183,14 @@ end
 ################################################################################
 
 aspect :page do
-  is_cacheable.needs_layout.has_priority(1)
+  is_cacheable.has_priority(1)
   accepts 'text/x-markdown'
   filter do
     editsection do
       remove_comments.tag_shortcuts.markdown_nowiki
       tag(disable: 'html:*') { markdown! }
     end
-    fix_image_links.toc
+    create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
   end
 end
@@ -199,11 +198,11 @@ end
 aspect :s5 do
   is_cacheable
   accepts 'text/x-markdown'
-  mime 'application/xhtml+xml; charset=utf-8'
+  mime 'text/html;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.markdown_nowiki
     tag(disable: 'html:*') { markdown! }
-    fix_image_links.toc
+    create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
     html_wrapper!.s5!
   end
@@ -212,7 +211,7 @@ end
 aspect :latex do
   is_cacheable
   accepts 'text/x-markdown'
-  mime 'text/plain; charset=utf-8'
+  mime 'text/plain;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.markdown_nowiki
     tag(static: true, disable: 'html:*') { markdown! }
@@ -226,12 +225,12 @@ end
 ################################################################################
 
 aspect :page do
-  is_cacheable.needs_layout.has_priority(1)
+  is_cacheable.has_priority(1)
   accepts 'text/x-orgmode'
   filter do
     remove_comments.tag_shortcuts
     tag { orgmode!.rubypants }
-    fix_image_links.toc
+    create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
   end
 end
@@ -239,11 +238,11 @@ end
 aspect :s5 do
   is_cacheable
   accepts 'text/x-orgmode'
-  mime 'application/xhtml+xml; charset=utf-8'
+  mime 'text/html;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts
     tag { orgmode!.rubypants }
-    fix_image_links.toc
+    create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
     html_wrapper!.s5!
   end
@@ -252,7 +251,7 @@ end
 aspect :latex do
   is_cacheable
   accepts 'text/x-orgmode'
-  mime 'text/plain; charset=utf-8'
+  mime 'text/plain;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts
     tag(static: true) { orgmode!.rubypants }
@@ -266,9 +265,9 @@ end
 ################################################################################
 
 aspect :calendar do
-  is_cacheable.needs_layout.has_priority(1)
+  is_cacheable.has_priority(1)
   accepts 'text/x-remind'
-  mime 'application/xhtml+xml; charset=utf-8'
+  mime 'text/html;charset=utf-8'
   filter do
     remind!.html2xml!
   end

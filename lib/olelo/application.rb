@@ -65,7 +65,7 @@ module Olelo
     # Handle 404s
     error NotFound do |error|
       Olelo.logger.debug(error)
-      if !env['HTTP_ACCEPT'] || env['HTTP_ACCEPT'] =~ /html/
+      if http_accept? /html/
         cache_control no_cache: true
         halt render(:not_found, locals: {error: error})
       else
@@ -75,7 +75,7 @@ module Olelo
 
     error StandardError do |error|
       Olelo.logger.error error
-      if on_error && (!env['HTTP_ACCEPT'] || env['HTTP_ACCEPT'] =~ /html/)
+      if on_error && http_accept? /html/
         (error.try(:messages) || [error.message]).each {|msg| flash.error!(msg) }
         halt render(on_error)
       end
@@ -84,7 +84,7 @@ module Olelo
     # Show wiki error page
     error Exception do |error|
       Olelo.logger.error(error)
-      if !env['HTTP_ACCEPT'] || env['HTTP_ACCEPT'] =~ /html/
+      if http_accept? /html/
         cache_control no_cache: true
         halt render(:error, locals: {error: error})
       end
@@ -221,7 +221,7 @@ module Olelo
         cache_control etag: page.etag
         show_page
       rescue NotFound
-        raise if env['HTTP_ACCEPT'] && !env['HTTP_ACCEPT'].include?('html')
+        raise unless http_accept?(/html/)
         redirect build_path(params[:path], action: :new)
       end
     end

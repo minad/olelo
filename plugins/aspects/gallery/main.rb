@@ -2,7 +2,7 @@ description    'Gallery aspect'
 dependencies   'utils/assets', 'aspects'
 export_scripts '*.css'
 
-Aspects::Aspect.create(:gallery, priority: 3, layout: true, hidden: true, cacheable: true) do
+Aspects::Aspect.create(:gallery, priority: 3, hidden: true, cacheable: true) do
   def accepts?(page); !page.children.empty?; end
   def call(context, page)
     @per_row = 4

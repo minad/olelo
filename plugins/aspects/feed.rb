@@ -2,7 +2,7 @@
 description 'Newsfeed Aspect'
 require 'time'
 
-Aspect.create(:feed, cacheable: true, hidden: true) do
+Aspect.create(:feed, cacheable: true, hidden: true, mime: %r{application/(atom|rss)+xml}) do
   def call(context, page)
     format = context.params[:format]
 

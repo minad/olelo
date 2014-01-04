@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 description 'Page information aspect'
 
-Aspect.create(:pageinfo, priority: 4, layout: true, cacheable: true) do
+Aspect.create(:pageinfo, priority: 4, cacheable: true) do
   def call(context, page)
     @page = page
     render :pageinfo

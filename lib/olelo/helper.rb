@@ -223,6 +223,10 @@ module Olelo
   module HttpHelper
     include Util
 
+    def http_accept?(re)
+      !env['HTTP_ACCEPT'] || env['HTTP_ACCEPT'] =~ re
+    end
+
     # Cache control for page
     def cache_control(options)
       return if !Config['production']

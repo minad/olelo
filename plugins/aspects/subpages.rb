@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 description 'Subpages aspect'
 
-Aspect.create(:subpages, priority: 2, layout: true, cacheable: true) do
+Aspect.create(:subpages, priority: 2, cacheable: true) do
   def accepts?(page); !page.children.empty?; end
   def call(context, page)
     @page_nr = [context.params[:page].to_i, 1].max
