@@ -7,7 +7,7 @@ rvm:
   - rbx
 matrix:
   allow_failures:
-    - rvm: rbx-19mode
+    - rvm: rbx
     - rvm: ruby-head
 # HACK: Fix problems with native libraries on ruby-head
 before_install:
