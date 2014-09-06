@@ -38,7 +38,7 @@ regexp :mediawiki_nowiki,  /<nowiki>.*?<\/nowiki>/m,    '<notags>\0</notags>'
 #    creole_nowiki                # Replace creole nowiki tags with <notags> to disable tag interpretation (next filter)
 #    tag do                       # Interpret wiki tags. Wiki tags are an extension to default wiki text
 #      creole!                    # Transform creole to html
-#      rubypants                  # Execute rubypants (e.g. replace ... with &hellip;)
+#      typohero                  # Execute typohero (e.g. replace ... with &hellip;)
 #    end
 #    toc                          # Auto-generate table of contents
 #    link_classifier              # Classify links: Insert classes present for present pages, absent for absent pages, internal, external
@@ -64,7 +64,7 @@ aspect :page do
   filter do
     editsection do
       remove_comments.tag_shortcuts
-      creole_nowiki.tag { creole!.rubypants }
+      creole_nowiki.tag { creole!.typohero }
     end
     create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
@@ -77,7 +77,7 @@ aspect :s5 do
   mime 'text/html;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts
-    creole_nowiki.tag { creole!.rubypants }
+    creole_nowiki.tag { creole!.typohero }
     create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
     html_wrapper!.s5!
@@ -90,7 +90,7 @@ aspect :latex do
   mime 'text/plain;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.creole_nowiki
-    tag(static: true) { creole!.rubypants }
+    tag(static: true) { creole!.typohero }
     interwiki(map: interwiki_map)
     html_wrapper!.xslt!(stylesheet: 'xhtml2latex.xsl')
   end
@@ -106,7 +106,7 @@ aspect :page do
   filter do
     editsection do
       remove_comments.tag_shortcuts
-      mediawiki_nowiki.tag { mediawiki!.rubypants }
+      mediawiki_nowiki.tag { mediawiki!.typohero }
     end
     create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
@@ -119,7 +119,7 @@ aspect :s5 do
   mime 'text/html;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts
-    mediawiki_nowiki.tag { mediawiki!.rubypants }
+    mediawiki_nowiki.tag { mediawiki!.typohero }
     create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
     html_wrapper!.s5!
@@ -132,7 +132,7 @@ aspect :latex do
   mime 'text/plain;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.mediawiki_nowiki
-    tag(static: true) { mediawiki!.rubypants }
+    tag(static: true) { mediawiki!.typohero }
     interwiki(map: interwiki_map)
     html_wrapper!.xslt!(stylesheet: 'xhtml2latex.xsl')
   end
@@ -147,7 +147,7 @@ aspect :page do
   accepts 'text/x-textile'
   filter do
     remove_comments.tag_shortcuts.textile_nowiki
-    tag(disable: 'html:*') { textile!.rubypants }
+    tag(disable: 'html:*') { textile!.typohero }
     create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
   end
@@ -159,7 +159,7 @@ aspect :s5 do
   mime 'text/html;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.textile_nowiki
-    tag(disable: 'html:*') { textile!.rubypants }
+    tag(disable: 'html:*') { textile!.typohero }
     create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
     html_wrapper!.s5!
@@ -172,7 +172,7 @@ aspect :latex do
   mime 'text/plain;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts.textile_nowiki
-    tag(static: true, disable: 'html:*') { textile!.rubypants }
+    tag(static: true, disable: 'html:*') { textile!.typohero }
     interwiki(map: interwiki_map)
     html_wrapper!.xslt!(stylesheet: 'xhtml2latex.xsl')
   end
@@ -229,7 +229,7 @@ aspect :page do
   accepts 'text/x-orgmode'
   filter do
     remove_comments.tag_shortcuts
-    tag { orgmode!.rubypants }
+    tag { orgmode!.typohero }
     create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
   end
@@ -241,7 +241,7 @@ aspect :s5 do
   mime 'text/html;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts
-    tag { orgmode!.rubypants }
+    tag { orgmode!.typohero }
     create_image_links.toc
     interwiki(map: interwiki_map).link_classifier
     html_wrapper!.s5!
@@ -254,7 +254,7 @@ aspect :latex do
   mime 'text/plain;charset=utf-8'
   filter do
     remove_comments.tag_shortcuts
-    tag(static: true) { orgmode!.rubypants }
+    tag(static: true) { orgmode!.typohero }
     interwiki(map: interwiki_map)
     html_wrapper!.xslt!(stylesheet: 'xhtml2latex.xsl')
   end
